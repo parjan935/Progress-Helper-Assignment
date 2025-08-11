@@ -49,7 +49,7 @@ export class AddHelperComponent implements OnInit {
 
   newHelperData = {}
   currDate = Date.now()
-  firstFormGroup!: FormGroup;
+  firstFormGroup!: FormGroup;   
 
   ngOnInit(): void {
     this.firstFormGroup = this.fb.group({

@@ -1,8 +1,13 @@
 <div *ngIf="!DocName" class="profile-pic kyc-docx-upload" matButton="elevated" (click)="opeDocxInputDialog()">
     <mat-icon>add</mat-icon>
 </div>
-<div *ngIf="DocName" class="kyc-docx">
-    <mat-icon class="desc-icon">description</mat-icon>
-    <p> {{DocName}}</p>
-    <mat-icon (click)="removeKycDocx()" class="delete-icon">delete</mat-icon>
+
+<div *ngIf="DocName" class="pdf-box">
+    <div class="file-details" (click)="openPdf()">
+        <span class="pdf-view">
+            <mat-icon color="warn" class="pdf-icon">picture_as_pdf</mat-icon> ( click to open pdf )
+        </span>
+        <div class="file-name">{{ DocName}}</div>
+    </div>
+    <mat-icon class="delete-icon" (click)="removeKycDocx()" class="delete-icon">delete</mat-icon>
 </div>

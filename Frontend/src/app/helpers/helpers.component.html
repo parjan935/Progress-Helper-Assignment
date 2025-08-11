@@ -20,7 +20,7 @@
     </div>
 
     <div class="filter-by-servOrg">
-      <button (click)="togglePopup($event)">
+      <button (click)="openFilter=!openFilter">
         <mat-icon>filter_alt</mat-icon>
       </button>
       <div #filterPopup *ngIf="openFilter">

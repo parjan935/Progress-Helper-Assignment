@@ -46,4 +46,19 @@ export class FileInputComponentComponent {
     this.DocName = ''
     this.removeFile.emit()
   }
+
+  openPdf() {
+    const { base64File, mimeType, fileName } = this.file
+    const file = { base64File, mimeType, fileName }
+    const blob = this.base64ToBlob(file.base64File, file.mimeType);
+    const url = URL.createObjectURL(blob);
+    window.open(url);
+  }
+
+  base64ToBlob(base64: string, mime: string): Blob {
+    const byteCharacters = atob(base64);
+    const byteNumbers = Array.from(byteCharacters, c => c.charCodeAt(0));
+    const byteArray = new Uint8Array(byteNumbers);
+    return new Blob([byteArray], { type: mime });
+  }
 }

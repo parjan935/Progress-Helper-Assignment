@@ -78,20 +78,20 @@ export class HelpersComponent {
   }
   openFilter = false;
 
-  @ViewChild('popupRef') popupRef!: ElementRef;
+  // @ViewChild('popupRef') popupRef!: ElementRef;
 
-  togglePopup(event: MouseEvent) {
-    event.stopPropagation();
-    this.openFilter = !this.openFilter;
-  }
+  // togglePopup(event: MouseEvent) {
+  //   event.stopPropagation();
+  //   this.openFilter = !this.openFilter;
+  // }
 
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent) {
-    const clickedInside = this.popupRef?.nativeElement.contains(event.target);
-    if (!clickedInside && this.openFilter) {
-      this.openFilter = false;
-    }
-  }
+  // @HostListener('document:click', ['$event'])
+  // onDocumentClick(event: MouseEvent) {
+  //   const clickedInside = this.popupRef?.nativeElement.contains(event.target);
+  //   if (!clickedInside && this.openFilter) {
+  //     this.openFilter = false;
+  //   }
+  // }
 
 
   constructor(private dialog: MatDialog, private api: ApiService) { }
