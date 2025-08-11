@@ -1,0 +1,46 @@
+<div class="header">
+  <a (click)="goToHome()">
+    <mat-icon>chevron_left</mat-icon> Update Helper
+  </a>
+</div>
+
+
+<div class="stepper-container">
+
+
+  <div class="step-side-bar">
+    <div class="step-label" (click)="opened='helperDetails'"
+      [style.backgroundColor]="opened==='helperDetails'?'gray':''" [style.color]="opened==='helperDetails'?'white':''">
+      <mat-icon>construction</mat-icon>
+      <h3 class="step-title">Helper Details</h3>
+    </div>
+    <div class="step-label" (click)="opened='Documents'" [style.backgroundColor]="opened==='Documents'?'gray':''"
+      [style.color]="opened==='Documents'?'white':''">
+      <mat-icon>article</mat-icon>
+      <h3 class="step-title">Documents</h3>
+    </div>
+  </div>
+
+  <div class="step-content" *ngIf="!loadingHelper">
+    <ng-container>
+
+      <app-helper-form *ngIf="opened==='helperDetails'" usedFor="updateHelper" [firstFormGroup]="firstFormGroup"
+        (formValid)="updateHelper()">
+      </app-helper-form>
+
+
+      <form class="step-form" *ngIf="opened==='Documents'" [formGroup]="firstFormGroup">
+        <h1>Additional Documents</h1>
+        <p>Upload related documents (Optional).</p>
+
+        <app-file-input-component [file]="get('additionalDocx')?.value"
+          (fileSelected)="onFileChange($event)" (removeFile)="removeSelectedFile()"></app-file-input-component>
+
+        <div class="nav-btns">
+          <button matButton (click)="updateHelper()"> <mat-icon>update</mat-icon> update</button>
+        </div>
+      </form>
+
+    </ng-container>
+  </div>
+</div>

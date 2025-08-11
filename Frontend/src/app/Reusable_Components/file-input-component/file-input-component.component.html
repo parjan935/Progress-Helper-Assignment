@@ -1,0 +1,8 @@
+<div *ngIf="!DocName" class="profile-pic kyc-docx-upload" matButton="elevated" (click)="opeDocxInputDialog()">
+    <mat-icon>add</mat-icon>
+</div>
+<div *ngIf="DocName" class="kyc-docx">
+    <mat-icon class="desc-icon">description</mat-icon>
+    <p> {{DocName}}</p>
+    <mat-icon (click)="removeKycDocx()" class="delete-icon">delete</mat-icon>
+</div>
