@@ -67,7 +67,14 @@ export class HelperServices {
         if (emp) employeeID = emp.employeeID + 1
         helper.employeeID = employeeID
 
-        await generateQRCode(helper).then((qr) => {
+        const payload = {
+            name: helper.name,
+            id: helper.employeeID,
+            email: helper.email,
+            organization: helper.organization,
+            service: helper.service
+        }
+        await generateQRCode(payload).then((qr) => {
             helper.employeeId_QR = qr
         })
 
@@ -95,7 +102,7 @@ export class HelperServices {
         await Helper.findByIdAndDelete(id)
     }
 
-    async updateHelper(id: string, helper: IHelper, files?: { [fieldname: string]: Express.Multer.File[] }) {
+    async updateHelper(id: string, helper: IHelper, files?: { [fieldname: string]: globalThis.Express.Multer.File[] }) {
         const kycFile = files?.kycDocx?.[0]
         const additionalDocx = files?.additionalDocx?.[0]
 

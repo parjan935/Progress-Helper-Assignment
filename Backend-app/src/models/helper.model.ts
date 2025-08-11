@@ -37,11 +37,8 @@ const helperSchema = new mongoose.Schema({
 
 helperSchema.pre('save', function (next) {
 
-    const lightBackgrounds = ['F0E68C', 'FFFACD', 'E0FFFF', 'F5F5DC', 'F0FFF0', 'FAFAD2'];
-    const randomLightBg = lightBackgrounds[Math.floor(Math.random() * lightBackgrounds.length)];
-
     if (this.profilePic.trim() === '') {
-        this.profilePic = `https://ui-avatars.com/api/?name=${encodeURIComponent(this.name)}&background=${randomLightBg}&color=333&rounded=true&length=2`;
+        this.profilePic = `https://ui-avatars.com/api/?name=${encodeURIComponent(this.name)}&background=random&color=333&rounded=true&length=2`;
 
     }
     next();
