@@ -30,6 +30,7 @@ interface Helper {
   phone: string;
   languages: string[];
   service: string;
+  households: number
   organization: string;
   vehicleType: string;
   kycDocx: { base64File: string, mimeType: string, fileName: string };

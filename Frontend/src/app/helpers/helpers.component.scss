@@ -117,22 +117,36 @@ mat-toolbar {
     .helper {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 10px;
       padding: 10px 15px;
       border-bottom: 1px solid rgb(217, 217, 217);
       cursor: pointer;
 
-      div {
-        p {
-          font-weight: 500;
-          font-size: medium;
-          margin: 0;
-        }
+      .left-data {
 
-        span {
-          color: rgb(193, 193, 193);
-          font-size: small;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        div {
+
+          p {
+            font-weight: 500;
+            font-size: medium;
+            margin: 0;
+          }
+
+          span {
+            color: rgb(193, 193, 193);
+            font-size: small;
+          }
         }
+      }
+
+      .households {
+        font-size: x-small;
+        justify-self: flex-end;
+        color: gray;
       }
     }
 

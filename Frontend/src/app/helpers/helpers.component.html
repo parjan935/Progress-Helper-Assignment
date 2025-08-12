@@ -94,14 +94,17 @@
       @for(helper of filteredHelpers; track helper){
       <div class="helper" (click)="selectedHelper=helper"
         [ngStyle]="{'background-color':helper.name===selectedHelper.name ? 'rgb(231, 230, 247)':''}">
-        <img [src]="helper.profilePic " alt="Profile Photo" alt="Prifile Photo"
-          style="width: 50px; height: 50px; border-radius: 100%;">
-        <div>
-          <p>
-            {{helper.name}}
-          </p>
-          <span>{{helper.service}}</span>
+        <div class="left-data">
+          <img [src]="helper.profilePic " alt="Profile Photo" alt="Prifile Photo"
+            style="width: 50px; height: 50px; border-radius: 100%;">
+          <div>
+            <p>
+              {{helper.name}}
+            </p>
+            <span>{{helper.service}}</span>
+          </div>
         </div>
+        <p class="households">{{helper.households}} households</p>
       </div>
       }
       <div *ngIf="!loadingHelpers && filteredHelpers && filteredHelpers.length==0"

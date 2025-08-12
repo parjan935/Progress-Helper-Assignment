@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink, RouterOutlet } from '@angular/router';
-import { Validators, FormsModule, ReactiveFormsModule, FormGroup, FormControl, FormBuilder } from '@angular/forms';
+import { Validators, FormsModule, ReactiveFormsModule, FormGroup, FormControl, FormBuilder, Form } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -133,11 +133,12 @@ export class UpdateHelperComponent implements OnInit {
   additionalDocChanged = false
 
   onFileChange(file: any) {
-    this.additionalDocChanged = true
+    // this.additionalDocChanged = true
     this.get('additionalDocx')?.reset()
     this.get('additionalDocx')?.setValue(file?.file)
   }
   removeSelectedFile() {
+    // this.additionalDocChanged = true
     this.get('additionalDocx')?.setValue(null)
   }
 
@@ -151,7 +152,8 @@ export class UpdateHelperComponent implements OnInit {
   updateHelper = async () => {
     try {
       if (this.firstFormGroup.get('kycDocx')?.value?.base64File) this.firstFormGroup.removeControl('kycDocx');
-      if (!this.additionalDocChanged) this.firstFormGroup.removeControl('additionalDocx');
+      if (this.firstFormGroup.get('additionalDocx')?.value?.base64File) this.firstFormGroup.removeControl('additionalDocx');
+
       const formData = new FormData();
       Object.entries(this.firstFormGroup.value).forEach(([key, value]) => {
         if (value instanceof File) {
@@ -160,8 +162,13 @@ export class UpdateHelperComponent implements OnInit {
           formData.append(key, value);
         } else if (value !== null && value !== undefined) {
           formData.append(key, value.toString());
+        } else if (typeof value === 'object') {
+          formData.append(key, JSON.stringify(value));
+        } else if (typeof value == null) {
+          formData.append(key, 'null');
         }
       })
+
       this.api.updateHelper(formData, this.helperID).subscribe((response) => {
         alert('Helper update successfull')
         this.router.navigate(['/'])

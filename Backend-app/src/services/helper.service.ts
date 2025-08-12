@@ -9,14 +9,14 @@ export interface IHelper {
     phone: string;
     service: string;
     organization: string;
-    languages: string[];
+    languages: string[] | string;
     households?: number | null;
     employeeId_QR: string;
     employeeID: Number;
     vehicleType: string;
     vehicleNo?: string;
     kycDocx: {};
-    additionalDocx?: {};
+    additionalDocx?: {} | null;
     dateJoined?: Date | string;
 }
 
@@ -57,7 +57,6 @@ export class HelperServices {
 
     async createHelper(helper: IHelper, files?: { [fieldname: string]: globalThis.Express.Multer.File[] }): Promise<IHelper> {
 
-
         let employeeID = 100
 
         const emp = await Helper.findOne()
@@ -79,6 +78,10 @@ export class HelperServices {
         })
 
         helper.dateJoined = new Date()
+
+        const lang = helper.languages as string
+        helper.languages=lang.split(',')
+
 
         const kycFile = files?.kycDocx?.[0]
         const additionalDocx = files?.additionalDocx?.[0]
@@ -108,22 +111,25 @@ export class HelperServices {
 
         if (kycFile) {
             helper.kycDocx = {
-                fileName: kycFile?.originalname,
-                mimeType: kycFile?.mimetype,
-                base64File: kycFile?.buffer.toString('base64'),
+                fileName: kycFile.originalname,
+                mimeType: kycFile.mimetype,
+                base64File: kycFile.buffer.toString('base64'),
             }
         }
-        console.log(additionalDocx);
-
         if (additionalDocx) {
             helper.additionalDocx = {
-                fileName: additionalDocx?.originalname,
-                mimeType: additionalDocx?.mimetype,
-                base64File: additionalDocx?.buffer.toString('base64'),
+                fileName: additionalDocx.originalname,
+                mimeType: additionalDocx.mimetype,
+                base64File: additionalDocx.buffer.toString('base64'),
             }
         }
-        console.log(helper);
+        if (!helper?.profilePic || helper.profilePic.trim() == '') {
+            helper.profilePic = `https://ui-avatars.com/api/?name=${helper.name}&background=random&color=333&rounded=true&length=2`;
+        }
 
+        if (helper.additionalDocx === 'null') {
+            helper.additionalDocx = null
+        }
         await Helper.findByIdAndUpdate(id, helper)
     }
 }

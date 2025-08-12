@@ -39,7 +39,6 @@ helperSchema.pre('save', function (next) {
 
     if (this.profilePic.trim() === '') {
         this.profilePic = `https://ui-avatars.com/api/?name=${encodeURIComponent(this.name)}&background=random&color=333&rounded=true&length=2`;
-
     }
     next();
 });

@@ -92,7 +92,7 @@ export class HelperFormComponent {
   }
 
   removeProfilePic() {
-    this.firstFormGroup?.get('profilePic')?.reset();
+    this.firstFormGroup?.get('profilePic')?.setValue('')
     this.imageBorder = 'dashed'
   }
   handleSubmitForm1() {
