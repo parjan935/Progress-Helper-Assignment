@@ -1,7 +1,7 @@
 import Helper from "../models/helper.model";
 import generateQRCode from "../utils/generateQR";
-export interface IHelper {
 
+export interface IHelper {
     name: string;
     profilePic?: string;
     email: string;
@@ -80,7 +80,7 @@ export class HelperServices {
         helper.dateJoined = new Date()
 
         const lang = helper.languages as string
-        helper.languages=lang.split(',')
+        helper.languages = lang.split(',')
 
 
         const kycFile = files?.kycDocx?.[0]
@@ -91,10 +91,15 @@ export class HelperServices {
             mimeType: kycFile?.mimetype,
             base64File: kycFile?.buffer.toString('base64'),
         }
-        helper.additionalDocx = {
-            fileName: additionalDocx?.originalname,
-            mimeType: additionalDocx?.mimetype,
-            base64File: additionalDocx?.buffer.toString('base64'),
+        if (additionalDocx) {
+            helper.additionalDocx = {
+                fileName: additionalDocx?.originalname,
+                mimeType: additionalDocx?.mimetype,
+                base64File: additionalDocx?.buffer.toString('base64'),
+            }
+        }
+        else {
+            helper.additionalDocx = null
         }
 
         const newHelper: IHelper = await new Helper(helper).save()

@@ -18,14 +18,15 @@ export class FileInputComponentComponent {
   constructor(private dialog: MatDialog) { }
 
   @Input() type: string = ''
-  @Input() file!: { base64File: string, mimeType: string, fileName: string };
+  @Input() file!: { base64File: string, mimeType: string, fileName: string } | File;
   @Output() fileSelected = new EventEmitter<any>();
   @Output() removeFile = new EventEmitter<number>();
 
   DocName = ''
 
   ngOnInit() {
-    this.DocName = this.file?.fileName
+    if (this.file instanceof File) this.DocName = this.file.name
+    else this.DocName = this.file?.fileName
   }
 
   opeDocxInputDialog(): void {
@@ -48,11 +49,17 @@ export class FileInputComponentComponent {
   }
 
   openPdf() {
-    const { base64File, mimeType, fileName } = this.file
-    const file = { base64File, mimeType, fileName }
-    const blob = this.base64ToBlob(file.base64File, file.mimeType);
-    const url = URL.createObjectURL(blob);
-    window.open(url);
+    if (this.file instanceof File) {
+      const fileURL = URL.createObjectURL(this.file);
+      window.open(fileURL);
+    }
+    else {
+      const { base64File, mimeType, fileName } = this.file
+      const file = { base64File, mimeType, fileName }
+      const blob = this.base64ToBlob(file.base64File, file.mimeType);
+      const url = URL.createObjectURL(blob);
+      window.open(url);
+    }
   }
 
   base64ToBlob(base64: string, mime: string): Blob {

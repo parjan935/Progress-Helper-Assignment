@@ -89,10 +89,9 @@
 
 <div class="example-container">
   <div class="mat-drawer" mode="side">
-    <div *ngIf="!loadingHelpers else loading">
+    <div *ngIf="!loadingHelpers else loading ">
 
-      @for(helper of filteredHelpers; track helper){
-      <div class="helper" (click)="selectedHelper=helper"
+      <div *ngFor="let helper of filteredHelpers" class="helper" (click)="selectedHelper=helper"
         [ngStyle]="{'background-color':helper.name===selectedHelper.name ? 'rgb(231, 230, 247)':''}">
         <div class="left-data">
           <img [src]="helper.profilePic " alt="Profile Photo" alt="Prifile Photo"
@@ -106,14 +105,15 @@
         </div>
         <p class="households">{{helper.households}} households</p>
       </div>
-      }
       <div *ngIf="!loadingHelpers && filteredHelpers && filteredHelpers.length==0"
         style="text-align: center; padding-top: 40px;">
         <p>No helpers to display.</p>
         <p *ngIf="helpers.length==0">Click on Add Helper to add.</p>
       </div>
     </div>
-    <ng-template #loading><mat-spinner style=" margin: auto; margin-top: 30px;"></mat-spinner></ng-template>
+    <ng-template #loading>
+      Loading<mat-spinner [diameter]="15" style="margin-left: 5px;"></mat-spinner>
+    </ng-template>
   </div>
   <div class="mat-drawer-content ">
     <div>

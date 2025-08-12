@@ -89,7 +89,6 @@ export class AddHelperComponent implements OnInit {
 
   onFileChange(file: any) {
     this.get('additionalDocx')?.setValue(file?.file)
-    console.log(this.get('additionalDocx')?.value);
 
   }
   removeSelectedFile() {
@@ -150,7 +149,6 @@ export class AddHelperComponent implements OnInit {
     try {
       this.api.createHelper(formData).subscribe((response) => {
         if (response.helper) {
-
           this.newHelperData = response.helper
           this.openVerifiedDialog()
         }

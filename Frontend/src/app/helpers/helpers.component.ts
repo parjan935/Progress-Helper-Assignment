@@ -21,6 +21,8 @@ import { ApiService } from '../api.service';
 
 import * as XLSX from 'xlsx';
 
+import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
+
 interface Helper {
   _id?: string,
   name: string;
@@ -57,7 +59,8 @@ interface Helper {
     MatIconModule,
     MatButtonModule,
     MatCardModule,
-    MatNativeDateModule, FormsModule, MatProgressSpinnerModule],
+    MatNativeDateModule, FormsModule, MatProgressSpinnerModule,
+    InfiniteScrollDirective],
   templateUrl: './helpers.component.html',
   styleUrl: './helpers.component.scss'
 })
@@ -117,12 +120,12 @@ export class HelpersComponent {
         this.filteredHelpers = this.helpers
         this.selectedHelper = this.filteredHelpers?.[0]
       })
-
     } catch (error) {
       console.log(error);
     }
     this.loadingHelpers = false
   }
+
 
   ///// Filtering & Sorting
   sortFilter: string = 'name';
@@ -262,6 +265,9 @@ export class HelpersComponent {
       XLSX.writeFile(workbook, 'selected-helpers.xlsx');
     }
   }
+
+
+
 
 }
 
