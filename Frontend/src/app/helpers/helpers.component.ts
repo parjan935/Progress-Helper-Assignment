@@ -129,23 +129,33 @@ export class HelpersComponent {
 
   ///// Filtering & Sorting
   sortFilter: string = 'name';
-  selectedDate: Date | null = null
+  selectedDate = {
+    start: '',
+    end: ''
+  }
   serviceFilter: string[] = []
   organizationFilter: string[] = []
   searchVal: string = '';
 
-  onDateChange(event: MatDatepickerInputEvent<Date>) {
-    this.selectedDate = event.value;
-    const date1 = new Date(this.selectedDate as Date);
+  applyDates() {
+    if (!this.selectedDate.end) {
+      this.selectedDate.start = ''
+      return
+    }
+    const st = new Date(this.selectedDate.start)
+    const end = new Date(this.selectedDate.end)
+    end.setHours(23, 59, 59, 999);
     this.filteredHelpers = this.helpers.filter(h => {
-      const date2 = new Date(h.dateJoined);
-      return (
-        date1.getFullYear() === date2.getFullYear() &&
-        date1.getMonth() === date2.getMonth() &&
-        date1.getDate() === date2.getDate()
-      );
+      const date = new Date(h.dateJoined);
+      return (date >= st && date <= end);
     });
-    this.selectedHelper = this.filteredHelpers?.[0]
+    this.selectedHelper = this.filteredHelpers[0]
+  }
+  resetDates() {
+    this.selectedDate.start = ''
+    this.selectedDate.end = ''
+    this.filteredHelpers = this.helpers
+    this.selectedHelper = this.filteredHelpers[0]
   }
 
   handleSearchChange() {
@@ -175,7 +185,7 @@ export class HelpersComponent {
 
   async filterHelpers() {
     this.loadingHelpers = true
-    this.selectedDate = null
+    // this.selectedDate = null
     this.sortFilter = 'name'
     const filter = { services: this.serviceFilter, orgs: this.organizationFilter, searchVal: this.searchVal }
     try {

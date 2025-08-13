@@ -55,7 +55,7 @@ export class HelperServices {
     }
 
 
-    async createHelper(helper: IHelper, files?: { [fieldname: string]: globalThis.Express.Multer.File[] }): Promise<IHelper> {
+    async createHelper(helper: IHelper, files?: any): Promise<IHelper> {
 
         let employeeID = 100
 
@@ -110,9 +110,13 @@ export class HelperServices {
         await Helper.findByIdAndDelete(id)
     }
 
-    async updateHelper(id: string, helper: IHelper, files?: { [fieldname: string]: globalThis.Express.Multer.File[] }) {
+    async updateHelper(id: string, helper: IHelper, files?: any) {
         const kycFile = files?.kycDocx?.[0]
         const additionalDocx = files?.additionalDocx?.[0]
+
+        const lang = helper.languages as string
+        helper.languages = lang.split(',')
+
 
         if (kycFile) {
             helper.kycDocx = {
@@ -135,6 +139,7 @@ export class HelperServices {
         if (helper.additionalDocx === 'null') {
             helper.additionalDocx = null
         }
+        
         await Helper.findByIdAndUpdate(id, helper)
     }
 }

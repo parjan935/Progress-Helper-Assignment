@@ -37,9 +37,10 @@ export class HelperControllers {
 
     async createHelper(req: Request, res: Response) {
         const helperData = req.body
-        const files = req.files as { [fieldname: string]: Express.Multer.File[] } | undefined;
+        const files = req.files
+
         try {
-            const newHelper = await helperService.createHelper(helperData, files)
+            const newHelper = await helperService.createHelper(helperData, files as any)
             if (newHelper) res.json({ message: 'Helper added successfully!', helper: newHelper })
             else res.status(400).json({ message: 'error adding helper' })
         } catch (error) {
@@ -60,7 +61,7 @@ export class HelperControllers {
     async updateHelper(req: Request, res: Response) {
         const id: string = req.params.id as string
         const helper = req.body
-        const files = req.files as { [fieldname: string]: Express.Multer.File[] } | undefined;
+        const files = req.files
 
         const old = await helperService.getHelperById(id)
 
@@ -68,7 +69,7 @@ export class HelperControllers {
             helper.profilePic = `https://ui-avatars.com/api/?name=${encodeURIComponent(helper.name)}&background=random&color=fff&rounded=true&length=2`;
         }
         try {
-            await helperService.updateHelper(id, helper, files)
+            await helperService.updateHelper(id, helper, files as any)
             res.json({ message: "Helper updated successfully!" })
         } catch (error) {
             res.status(500).json(error)

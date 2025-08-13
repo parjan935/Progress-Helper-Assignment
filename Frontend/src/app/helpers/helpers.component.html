@@ -61,10 +61,18 @@
       </div>
     </div>
 
-    <div class="calendar">
-      <input matInput [matDatepicker]="picker" (dateChange)="onDateChange($event)" [(ngModel)]="selectedDate" hidden>
-      <mat-datepicker #picker></mat-datepicker>
-      <button matButton (click)="picker.open()"> <mat-icon>event</mat-icon></button>
+    <div class="calendar" style="display: flex; align-items: center;">
+      <mat-date-range-input [rangePicker]="rangePicker" style="display: none !important;">
+        <input matStartDate placeholder="Start date" hidden [(ngModel)]="selectedDate.start" />
+        <input matEndDate placeholder="End date" hidden [(ngModel)]="selectedDate.end" />
+      </mat-date-range-input>
+      <button matButton (click)="rangePicker.open()"> <mat-icon>event</mat-icon></button>
+      <mat-date-range-picker #rangePicker>
+        <mat-date-range-picker-actions>
+          <button matButton matDateRangePickerCancel (click)="resetDates()" style="margin-right: 10px;">Reset</button>
+          <button matButton="elevated" matDateRangePickerApply (click)=applyDates()>Apply</button>
+        </mat-date-range-picker-actions>
+      </mat-date-range-picker>
     </div>
 
     <div class="search">
@@ -72,7 +80,10 @@
       <input type="search" placeholder="Search by name" [(ngModel)]="searchVal" (input)="handleSearchChange()"
         #searchInput>
     </div>
-    <span style="font-size:small; color: gray;">{{filteredHelpers && filteredHelpers.length}} helpers</span>
+    <span style="font-size:small; color: gray;">
+      {{helpers.length==filteredHelpers.length ? helpers.length : filteredHelpers.length+" of "+helpers.length }}
+      helpers
+    </span>
   </div>
   <div class="save-add">
     <div class="save" (click)="saveAsExcel()">
