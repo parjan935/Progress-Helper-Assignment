@@ -49,15 +49,12 @@ export class AddHelperComponent implements OnInit {
 
   newHelperData = {}
   currDate = Date.now()
-  firstFormGroup!: FormGroup;   
+  firstFormGroup!: FormGroup;
 
   ngOnInit(): void {
     this.firstFormGroup = this.fb.group({
       name: ['', Validators.required],
-      email: ['', [
-        Validators.required,
-        Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')
-      ]],
+      email: ['', [Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
       profilePic: [''],
       gender: ['', Validators.required],
       phone: ['', [Validators.required, Validators.pattern('^[6-9][0-9]{9}$')]],
@@ -72,8 +69,8 @@ export class AddHelperComponent implements OnInit {
 
     this.firstFormGroup.get('vehicleType')?.valueChanges.subscribe(value => {
       const vehicleNoControl = this.firstFormGroup.get('vehicleNo');
-
-      if (value && value !== 'None') {
+      
+      if (value && value != 'None') {
         vehicleNoControl?.setValidators([Validators.required]);
       } else {
         vehicleNoControl?.clearValidators();

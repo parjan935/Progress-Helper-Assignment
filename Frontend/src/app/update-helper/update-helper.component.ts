@@ -19,7 +19,6 @@ import { FileInputComponentComponent } from '../Reusable_Components/file-input-c
 
 
 interface Helper {
-  _id?: string,
   name: string;
   email: string;
   profilePic: string;
@@ -95,10 +94,7 @@ export class UpdateHelperComponent implements OnInit {
   populateHelperData() {
     this.firstFormGroup = this.fb.group({
       name: [this.helper?.name, Validators.required],
-      email: [this.helper?.email, [
-        Validators.required,
-        Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')
-      ]],
+      email: [this.helper?.email, [Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
       service: [this.helper.service, Validators.required],
       profilePic: [this.helper.profilePic as string],
       gender: [this.helper.gender, Validators.required],

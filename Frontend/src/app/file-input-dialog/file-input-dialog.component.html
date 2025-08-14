@@ -16,16 +16,16 @@
     </mat-form-field>
     <p class="error" *ngIf="showError && fileType==''">this is mandatory field*</p> 
 
-    <span style="font-size: smaller;">please ensure both sides of document is enabled</span>
+    <span class="note">please ensure both sides of document is enabled</span>
     <label class="doc-upload" for="fileInput"> <mat-icon>cloud_upload</mat-icon> Click to upload files</label>
     <input type="file" id="fileInput" hidden (change)="onFileSelected($event)" accept="application/pdf" />
-    <p style="font-size: smaller; color: red; margin: 5px;" *ngIf="showError && !pdfFile">this is mandatory field*</p> 
-    <p style="font-size: small;">Selected : {{pdfFile?.name || '---' }}</p>
+    <p class="error" *ngIf="showError && !pdfFile">this is mandatory field*</p> 
+    <p class="pdf-name">Selected : {{pdfFile?.name || '---' }}</p>
 
   </mat-dialog-content>
   <mat-dialog-actions>
-    <button matButton style="border: 1px solid black; background-color: transparent; color: black; margin-right: 10px;"
+    <button matButton 
       (click)="onClose()">cancel</button>
-    <button matButton style="border: none;" (click)="saveData()" cdkFocusInitial>Save</button>
+    <button matButton (click)="saveData()" cdkFocusInitial>Save</button>
   </mat-dialog-actions>
 </div>

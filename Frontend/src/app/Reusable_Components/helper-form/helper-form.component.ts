@@ -59,6 +59,7 @@ export class HelperFormComponent {
       'Hindi',
     ],
     vehicleTypes: [
+      'None',
       'Auto',
       'Bike',
       'Car'

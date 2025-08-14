@@ -1,4 +1,5 @@
-<mat-toolbar style="border: 1px solid rgb(206, 204, 204);">
+<mat-toolbar style="  border: 1px solid rgb(206, 204, 204);
+"> 
   <div>Helpers</div>
 </mat-toolbar>
 <mat-toolbar>
@@ -25,11 +26,11 @@
       </button>
       <div #filterPopup *ngIf="openFilter">
         <mat-card class="example-card">
-          <mat-card-header style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-            <mat-icon style="align-self: flex-end; cursor: pointer;" (click)="openFilter=false">close</mat-icon>
+          <mat-card-header>
+            <mat-icon (click)="openFilter=false">close</mat-icon>
             <mat-card-title>Filter</mat-card-title>
           </mat-card-header>
-          <mat-card-content style="display: flex; flex-direction: column; font-size: small;">
+          <mat-card-content>
             <label for="service">Type of Service*</label>
 
             <mat-form-field appearance="outline">
@@ -61,15 +62,15 @@
       </div>
     </div>
 
-    <div class="calendar" style="display: flex; align-items: center;">
-      <mat-date-range-input [rangePicker]="rangePicker" style="display: none !important;">
+    <div class="calendar">
+      <mat-date-range-input [rangePicker]="rangePicker">
         <input matStartDate placeholder="Start date" hidden [(ngModel)]="selectedDate.start" />
         <input matEndDate placeholder="End date" hidden [(ngModel)]="selectedDate.end" />
       </mat-date-range-input>
       <button matButton (click)="rangePicker.open()"> <mat-icon>event</mat-icon></button>
       <mat-date-range-picker #rangePicker>
         <mat-date-range-picker-actions>
-          <button matButton matDateRangePickerCancel (click)="resetDates()" style="margin-right: 10px;">Reset</button>
+          <button matButton matDateRangePickerCancel (click)="resetDates()">Reset</button>
           <button matButton="elevated" matDateRangePickerApply (click)=applyDates()>Apply</button>
         </mat-date-range-picker-actions>
       </mat-date-range-picker>
@@ -80,7 +81,7 @@
       <input type="search" placeholder="Search by name" [(ngModel)]="searchVal" (input)="handleSearchChange()"
         #searchInput>
     </div>
-    <span style="font-size:small; color: gray;">
+    <span class="helper-count">
       {{helpers.length==filteredHelpers.length ? helpers.length : filteredHelpers.length+" of "+helpers.length }}
       helpers
     </span>
@@ -91,7 +92,7 @@
     </div>
     <button routerLink="add-helper">
       <mat-icon>add</mat-icon>
-      <a style="color: white; text-decoration: none;">Add-helper</a>
+      <a>Add-helper</a>
     </button>
   </div>
 </mat-toolbar>
@@ -105,8 +106,8 @@
       <div *ngFor="let helper of filteredHelpers" class="helper" (click)="selectedHelper=helper"
         [ngStyle]="{'background-color':helper.name===selectedHelper.name ? 'rgb(231, 230, 247)':''}">
         <div class="left-data">
-          <img [src]="helper.profilePic " alt="Profile Photo" alt="Prifile Photo"
-            style="width: 50px; height: 50px; border-radius: 100%;">
+          <img alt="Prifile Photo"
+            [src]="helper.profilePic || 'https://ui-avatars.com/api/?name='+helper.name+'&background=random&color=fff&rounded=true&length=2'">
           <div>
             <p>
               {{helper.name}}
@@ -116,8 +117,7 @@
         </div>
         <p class="households">{{helper.households}} households</p>
       </div>
-      <div *ngIf="!loadingHelpers && filteredHelpers && filteredHelpers.length==0"
-        style="text-align: center; padding-top: 40px;">
+      <div class="no-helpers" *ngIf="!loadingHelpers && filteredHelpers && filteredHelpers.length==0">
         <p>No helpers to display.</p>
         <p *ngIf="helpers.length==0">Click on Add Helper to add.</p>
       </div>
@@ -129,9 +129,10 @@
   <div class="mat-drawer-content ">
     <div>
       <div *ngIf="selectedHelper!==undefined; else noHelpers" class="helper-details">
-        <div style="display: flex; align-items: center; justify-content: space-between;">
+        <div class="data">
           <div class="main-data">
-            <img style="width: 100px; height: 100px; border-radius: 100%;" [src]="selectedHelper.profilePic "
+            <img
+              [src]="selectedHelper.profilePic || 'https://ui-avatars.com/api/?name='+selectedHelper.name+'&background=random&color=fff&rounded=true&length=2'"
               alt="Profile Photo" alt="Profile Photo" />
             <div>
               <p>{{ selectedHelper.name }}</p>
@@ -144,9 +145,9 @@
           </div>
         </div>
         <div>
-          <div style="display: flex; align-items: center; gap: 15px;">
-            <h5 style="display: flex; width: fit-content; color: gray;">EMPLOYEE ID</h5>
-            <span style="flex: 1; border: 0.5px solid rgb(234, 234, 234); height: 0;"></span>
+          <div class="sub-heads">
+            <h5>EMPLOYEE ID</h5>
+            <span></span>
           </div>
           <div class="other-data">
             <div>
@@ -155,7 +156,7 @@
             </div>
             <div>
               <span class="view-docx" (click)="openEmployeeIdDialog()">
-                <mat-icon style="font-size: large; width: fit-content; height: fit-content;">visibility</mat-icon>
+                <mat-icon>visibility</mat-icon>
                 view
               </span>
               <span>{{selectedHelper.employeeID}}</span>
@@ -163,9 +164,9 @@
           </div>
         </div>
         <div>
-          <div style="display: flex; align-items: center; gap: 15px;">
-            <h5 style="display: flex; width: fit-content;  color: gray;">PERSONAL DETAILS</h5>
-            <span style="flex: 1; border: 0.5px solid rgb(234, 234, 234); height: 0;"></span>
+          <div class="sub-heads">
+            <h5>PERSONAL DETAILS</h5>
+            <span></span>
           </div>
           <div class="other-data">
             <div>
@@ -181,16 +182,16 @@
               <span>{{ selectedHelper.phone }}</span>
               <span>{{ selectedHelper.email }}</span>
               <span class="view-docx" (click)="viewKycDocx()">
-                <mat-icon style="font-size: large; width: fit-content; height: fit-content;">visibility</mat-icon>
+                <mat-icon>visibility</mat-icon>
                 view
               </span>
             </div>
           </div>
         </div>
         <div>
-          <div style="display: flex; align-items: center; gap: 15px;">
-            <h5 style="display: flex; width: fit-content;  color: gray;">SERVICE DETAILS</h5>
-            <span style="flex: 1; border: 0.5px solid rgb(234, 234, 234); height: 0;"></span>
+          <div class="sub-heads">
+            <h5>SERVICE DETAILS</h5>
+            <span></span>
           </div>
           <div class="other-data">
             <div>
@@ -207,7 +208,7 @@
         </div>
       </div>
       <ng-template #noHelpers>
-        <div style="display: flex; height: 100%; justify-content: center; padding-top: 40px;">
+        <div class="no-helper">
           <p>Select a helper to diaplay.</p>
         </div>
       </ng-template>

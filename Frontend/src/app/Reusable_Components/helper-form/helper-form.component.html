@@ -1,4 +1,4 @@
-<form class="step-form" [formGroup]="firstFormGroup" (ngSubmit)="handleSubmitForm1()">           
+<form class="step-form" [formGroup]="firstFormGroup" (ngSubmit)="handleSubmitForm1()">
     <h2>Helper Details</h2>
     <p>Track, Add and Manage all your helpers at one place</p>
 
@@ -11,7 +11,8 @@
         </ng-template>
     </label>
     <span class="remove-img">
-        <span (click)="removeProfilePic()" *ngIf="get('profilePic')?.value && !get('profilePic')?.value.startsWith('https://ui-avatars.com'); else noImage">
+        <span (click)="removeProfilePic()"
+            *ngIf="get('profilePic')?.value && !get('profilePic')?.value.startsWith('https://ui-avatars.com'); else noImage">
             remove image
         </span>
         <ng-template #noImage> No image uploaded</ng-template>
@@ -71,7 +72,8 @@
         <mat-radio-button value="Female">Female</mat-radio-button>
         <mat-radio-button value="Other">Other</mat-radio-button>
     </mat-radio-group>
-    <span class="error" style="margin-top: 10px;" *ngIf="formSubmitted && get('gender')?.hasError('required')">this filed is mandatory*</span>
+    <span class="error" style="margin-top: 10px;" *ngIf="formSubmitted && get('gender')?.hasError('required')">this
+        filed is mandatory*</span>
 
     <label for="phone">Phone*</label>
     <mat-form-field appearance="outline">
@@ -82,7 +84,7 @@
     <span class="error" *ngIf="formSubmitted && get('phone')?.value !=='' && get('phone')?.invalid">invalid mobile
         number</span>
 
-    <label for="email">Email*</label>
+    <label for="email">Email</label>
     <mat-form-field appearance="outline">
         <input matInput placeholder="Enter email" formControlName="email">
     </mat-form-field>
@@ -94,7 +96,6 @@
     <label for="vehicle">Choose vehicle type*</label>
     <mat-form-field appearance="outline">
         <mat-select placeholder="select veichle type" formControlName="vehicleType">
-            <mat-option [value]="0">None</mat-option>
             @for(vt of inputOptions.vehicleTypes; track vt){
             <mat-option [value]="vt">{{vt}}</mat-option>
             }
@@ -103,8 +104,9 @@
     <span class="error" *ngIf="formSubmitted && get('vehicleType')?.hasError('required')">this filed is
         mandatory*</span>
 
-    <label *ngIf="get('vehicleType')?.value" for="vehicleNo.">Vehicle Number*</label>
-    <mat-form-field *ngIf="get('vehicleType')?.value" appearance="outline">
+    <label *ngIf="get('vehicleType')?.value && get('vehicleType')?.value!='None'" for="vehicleNo.">Vehicle
+        Number*</label>
+    <mat-form-field *ngIf="get('vehicleType')?.value && get('vehicleType')?.value!='None'" appearance="outline">
         <input matInput placeholder="TS08HR1342" formControlName="vehicleNo">
     </mat-form-field>
     <span class="error" *ngIf="formSubmitted && (get('vehicleNo')?.hasError('required'))">this filed is

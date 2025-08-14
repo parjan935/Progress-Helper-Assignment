@@ -286,7 +286,6 @@ export class HelpersComponent {
   standalone: true,
   imports: [MatIcon],
   templateUrl: './deleteHelperDialog.html',
-  styleUrl: './helpers.component.scss'
 })
 
 class DeleteHelperDialog {

@@ -1,19 +1,21 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 
 const helperSchema = new mongoose.Schema({
     name: { type: String, required: true },
     profilePic: { type: String, default: '' },
-    email: { type: String, required: true, unique: true },
+    email: { type: String, default: null},
     gender: { type: String, required: true },
     phone: { type: String, required: true },
     service: { type: String, required: true },
     organization: { type: String, required: true },
-    languages: { type: Array, required: true },
-    households: { type: Number, default: 0 },
+    languages: { /// 
+        type: [{ type: Schema.Types.String, required: true }],
+        required: true
+    },
     employeeId_QR: { type: String, required: true },
     employeeID: { type: Number, required: true, unique: true },
-    vehicleType: { type: String, required: true },
+    vehicleType: { type: String, required: true }, 
     vehicleNo: { type: String, default: '' },
     kycDocx: {
         type: {
@@ -34,15 +36,6 @@ const helperSchema = new mongoose.Schema({
     },
     dateJoined: { type: Date, required: true }
 })
-
-helperSchema.pre('save', function (next) {
-
-    if (this.profilePic.trim() === '') {
-        this.profilePic = `https://ui-avatars.com/api/?name=${encodeURIComponent(this.name)}&background=random&color=333&rounded=true&length=2`;
-    }
-    next();
-});
-
 
 const Helper = mongoose.model('Helper', helperSchema);
 

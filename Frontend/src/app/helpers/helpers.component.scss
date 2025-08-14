@@ -29,6 +29,23 @@ mat-toolbar {
         top: 115px;
         left: 60px;
 
+        mat-card-header {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 10px;
+
+          mat-icon {
+            align-self: flex-end;
+            cursor: pointer;
+          }
+        }
+
+        mat-card-content {
+          display: flex;
+          flex-direction: column;
+          font-size: small;
+        }
+
         mat-card-actions {
           align-self: flex-end;
           padding: 20px;
@@ -46,6 +63,26 @@ mat-toolbar {
           }
         }
       }
+    }
+
+    .calendar {
+      display: flex;
+      align-items: center;
+
+      mat-date-range-input {
+        display: none !important;
+      }
+
+      mat-date-range-picker-actions {
+        button:nth-child(1) {
+          margin-left: 10px;
+        }
+      }
+    }
+
+    .helper-count {
+      font-size: small;
+      color: gray;
     }
 
 
@@ -77,6 +114,13 @@ mat-toolbar {
     display: flex;
     align-items: center;
     gap: 10px;
+
+    button {
+      a {
+        color: white;
+        text-decoration: none;
+      }
+    }
 
     .save {
       border: 1px solid black;
@@ -114,6 +158,11 @@ mat-toolbar {
       border-top-left-radius: 10px;
     }
 
+    .no-helpers {
+      text-align: center;
+      padding-top: 40px;
+    }
+
     .helper {
       display: flex;
       align-items: center;
@@ -124,10 +173,16 @@ mat-toolbar {
       cursor: pointer;
 
       .left-data {
+        img {
+          width: 50px;
+          height: 50px;
+          border-radius: 100%;
+        }
 
         display: flex;
         align-items: center;
         gap: 10px;
+
         div {
 
           p {
@@ -168,6 +223,15 @@ mat-toolbar {
     border-radius: 10px;
     margin-right: 20px;
 
+    div {
+      .no-helper {
+        display: flex;
+        height: 100%;
+        justify-content: center;
+        padding-top: 40px;
+      }
+    }
+
     .edit-delete-btns {
       display: flex;
       justify-content: end;
@@ -202,46 +266,86 @@ mat-toolbar {
         font-size: small;
       }
 
-      .main-data {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-
-        div {
-          p {
-            font-weight: 500;
-            font-size: medium;
-            margin: 0;
-          }
-
-        }
-      }
-
-
-      .other-data {
-        display: flex;
-        width: 100%;
-
-        div {
-          display: flex;
-          flex-direction: column;
-          min-width: 200px;
-          gap: 15px;
-        }
-
-        .view-docx {
+      div {
+        .sub-heads {
           display: flex;
           align-items: center;
-          gap: 5px;
-          color: rgb(95, 143, 247);
-          cursor: pointer;
-          width: fit-content;
+          gap: 15px;
+
+          h5 {
+            display: flex;
+            width: fit-content;
+            color: gray;
+          }
+
+          span {
+            flex: 1;
+            border: 0.5px solid rgb(234, 234, 234);
+            height: 0;
+          }
         }
 
-        .view-docx:hover {
-          text-decoration: underline;
+        .other-data {
+          display: flex;
+          width: 100%;
+
+          div {
+            display: flex;
+            flex-direction: column;
+            min-width: 200px;
+            gap: 15px;
+          }
+
+          .view-docx {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: rgb(95, 143, 247);
+            cursor: pointer;
+            width: fit-content;
+
+            mat-icon {
+              font-size: large;
+              width: fit-content;
+              height: fit-content;
+            }
+          }
+
+          .view-docx:hover {
+            text-decoration: underline;
+          }
         }
       }
+
+      .data {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+
+        .main-data {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+
+          div {
+            p {
+              font-weight: 500;
+              font-size: medium;
+              margin: 0;
+            }
+          }
+
+          img {
+            width: 100px;
+            height: 100px;
+            border-radius: 100%;
+          }
+        }
+      }
+
+
+
     }
   }
 }

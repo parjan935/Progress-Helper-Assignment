@@ -15,8 +15,8 @@
             </div>
             <div class="helper-details">
                 <h3> 
-                    <mat-icon *ngIf="helper.profilePic.startsWith('https://ui-avatars.com')">person</mat-icon>
-                    <img *ngIf="!helper.profilePic.startsWith('https://ui-avatars.com')" [src]="helper.profilePic" alt="">
+                    <mat-icon *ngIf="!helper.profilePic">person</mat-icon>
+                    <img *ngIf="helper.profilePic" [src]="helper.profilePic" alt="profilePic">
                     {{helper.name}}
                 </h3>
                 <span>{{helper.service}}</span>
