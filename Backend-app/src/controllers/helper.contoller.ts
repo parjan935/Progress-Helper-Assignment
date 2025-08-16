@@ -31,11 +31,10 @@ export class HelperControllers {
 
     async getHelpersByFilters(req: Request, res: Response) {
 
-        Object.keys(req.body).forEach((key) => {
-            if (key !== 'services' && key !== 'orgs' && key !== 'serarhVal') {
-                return res.status(400).json({ error: "Invalid fields in req.body" })
-            }
-        })
+        const InvalidKeys: string[] = Object.keys(req.body).filter
+            ((key) => { key !== 'services' && key !== 'orgs' && key !== 'serarhVal' })
+
+        if (InvalidKeys.length > 0) return res.status(400).json({ error: "invalid fields in req.body" })
 
         try {
             const helpers = await helperService.getHelpersByFilters(req.body)

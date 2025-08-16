@@ -158,8 +158,14 @@ export class HelpersComponent {
     this.selectedHelper = this.filteredHelpers[0]
   }
 
+  timeOut: any
   handleSearchChange() {
-    this.filterHelpers()
+    clearTimeout(this.timeOut)
+    this.timeOut = setTimeout(() => {
+      console.log(this.searchVal);
+
+      this.filterHelpers()
+    }, 500);
   }
 
   applyFilter() {

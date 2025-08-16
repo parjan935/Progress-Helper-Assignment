@@ -115,7 +115,7 @@
             <span>{{helper.service}}</span>
           </div>
         </div>
-        <p class="households">{{helper.households}} households</p>
+        <p class="households">0 households</p>
       </div>
       <div class="no-helpers" *ngIf="!loadingHelpers && filteredHelpers && filteredHelpers.length==0">
         <p>No helpers to display.</p>
@@ -180,7 +180,7 @@
               <span>{{ selectedHelper.gender }}</span>
               <span>{{ selectedHelper.languages }}</span>
               <span>{{ selectedHelper.phone }}</span>
-              <span>{{ selectedHelper.email }}</span>
+              <span>{{ selectedHelper.email || "--"}}</span>
               <span class="view-docx" (click)="viewKycDocx()">
                 <mat-icon>visibility</mat-icon>
                 view
