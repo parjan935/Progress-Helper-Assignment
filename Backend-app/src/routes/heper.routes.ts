@@ -17,5 +17,7 @@ router.put('/:id', fileUploadMiddleware, helperController.updateHelper)
 
 router.post('/getByFilter', helperController.getHelpersByFilters)
 
+router.post('/download-helpers', helperController.downloadHelpers)
+
 export default router
 

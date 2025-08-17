@@ -256,8 +256,11 @@ export class HelpersComponent {
     this.dialog.open(EmployeeIdDialogComponent, { data })
   }
 
-  viewKycDocx() {
-    const { base64File, mimeType, fileName } = this.selectedHelper.kycDocx
+  viewDocx(docx: string) {
+    let value = null
+    if (docx == 'kycDocx') value = this.selectedHelper.kycDocx
+    else value = this.selectedHelper.additionalDocx
+    const { base64File, mimeType, fileName } = value
     const file = { base64File, mimeType, fileName }
     const blob = this.base64ToBlob(file.base64File, file.mimeType);
     const url = URL.createObjectURL(blob);
@@ -272,6 +275,11 @@ export class HelpersComponent {
   }
 
   saveAsExcel(): void {
+    // try {
+    //   this.api.downloadHelpers(this.filteredHelpers)
+    // } catch (error) {
+    //   console.log(error);
+    // }
     if (confirm(`Do you want to download the filtered helpers in excel sheet format ?`)) {
       const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.filteredHelpers);
       const workbook: XLSX.WorkBook = {
@@ -281,10 +289,6 @@ export class HelpersComponent {
       XLSX.writeFile(workbook, 'selected-helpers.xlsx');
     }
   }
-
-
-
-
 }
 
 @Component({

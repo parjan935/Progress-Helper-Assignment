@@ -33,9 +33,9 @@
     <span class="error" *ngIf="formSubmitted && get('service')?.hasError('required')">this filed is
         mandatory*</span>
 
-    <label for="org">Organizatino Name*</label>
+    <label for="org">Organization Name*</label>
     <mat-form-field appearance="outline">
-        <mat-select placeholder="Organizatino Name" formControlName="organization">
+        <mat-select placeholder="Organization Name" formControlName="organization">
             <mat-option *ngFor="let o of inputOptions.orgs" [value]="o">{{o}}</mat-option>
         </mat-select>
     </mat-form-field>

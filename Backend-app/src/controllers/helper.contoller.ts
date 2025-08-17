@@ -96,4 +96,21 @@ export class HelperControllers {
             res.status(500).json(error)
         }
     }
+
+    async downloadHelpers(req: Request, res: Response) {
+        try {
+            const response: Buffer = await helperService.downloadHelpers(req.body)
+            res.setHeader(
+                "Content-Disposition",
+                "attachment; filename=Helpers.xlsx"
+            );
+            res.setHeader(
+                "Content-Type",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            );
+            res.send(response)
+        } catch (error) {
+            res.status(500).json(error)
+        }
+    }
 }

@@ -1,6 +1,9 @@
 import Helper from "../models/helper.model";
 import generateQRCode from "../utils/generateQR";
 
+import * as XLSX from 'xlsx';
+
+
 export interface IHelper {
     name: string;
     profilePic: string;
@@ -85,5 +88,19 @@ export class HelperServices {
         }
 
         await Helper.findByIdAndUpdate(id, helper)
+    }
+
+    async downloadHelpers(helpers: any): Promise<Buffer> {
+        const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(helpers);
+
+        const workbook: XLSX.WorkBook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Helpers');
+
+        const buffer: Buffer = XLSX.write(workbook, {
+            type: 'buffer',
+            bookType: 'xlsx',
+        });
+
+        return buffer;
     }
 }

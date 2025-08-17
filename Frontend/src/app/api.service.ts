@@ -35,4 +35,16 @@ export class ApiService {
     updateHelper(payload: FormData, id: string): Observable<any> {
         return this.http.put(`${this.baseUrl}/${id}`, payload)
     }
+
+    downloadHelpers(payload: any[]): void {
+        this.http.post(`${this.baseUrl}/download-helpers`, payload, { responseType: 'blob' })
+            .subscribe(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'selected-helpers.xlsx';
+                a.click();
+                window.URL.revokeObjectURL(url);
+            })
+    }
 }

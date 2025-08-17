@@ -1,5 +1,5 @@
 <mat-toolbar style="  border: 1px solid rgb(206, 204, 204);
-"> 
+">
   <div>Helpers</div>
 </mat-toolbar>
 <mat-toolbar>
@@ -42,9 +42,9 @@
               </mat-select>
             </mat-form-field>
 
-            <label for="org">Organizatino Name*</label>
+            <label for="org">Organization Name*</label>
             <mat-form-field appearance="outline">
-              <mat-select placeholder="Organizatino Name" [(ngModel)]="organizationFilter" multiple>
+              <mat-select placeholder="Organization Name" [(ngModel)]="organizationFilter" multiple>
                 <mat-option (click)="selectOrDeselectAll('organization')"
                   [value]="'all'">{{organizationFilter.length===inputOptions.orgs.length?'Deselect
                   All':'Select All'}} </mat-option>
@@ -175,16 +175,23 @@
               <span>Mobile</span>
               <span>Email</span>
               <span>KYC Document</span>
+              <span>Additioanl Document</span>
             </div>
             <div>
               <span>{{ selectedHelper.gender }}</span>
               <span>{{ selectedHelper.languages }}</span>
               <span>{{ selectedHelper.phone }}</span>
               <span>{{ selectedHelper.email || "--"}}</span>
-              <span class="view-docx" (click)="viewKycDocx()">
+              <span class="view-docx" (click)="viewDocx('kycDocx')">
                 <mat-icon>visibility</mat-icon>
                 view
               </span>
+              <span *ngIf="selectedHelper.additionalDocx else noDocx" class="view-docx"
+                (click)="viewDocx('additionalDocx')">
+                <mat-icon>visibility</mat-icon>
+                view
+              </span>
+              <ng-template #noDocx>--</ng-template>
             </div>
           </div>
         </div>
