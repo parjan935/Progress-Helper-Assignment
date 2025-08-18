@@ -1,3 +1,4 @@
+import { error } from "console";
 import { HelperServices } from "../services/helper.service";
 import { Request, Response } from 'express';
 
@@ -30,6 +31,8 @@ export class HelperControllers {
     }
 
     async getHelpersByFilters(req: Request, res: Response) {
+        const { services, orgs, searchVal } = req.body
+        if (!services || !orgs || !searchVal) return res.status(400).json({ error: "missing fields in req.body" })
 
         const InvalidKeys: string[] = Object.keys(req.body).filter
             ((key) => { key !== 'services' && key !== 'orgs' && key !== 'serarhVal' })
@@ -56,6 +59,14 @@ export class HelperControllers {
     }
 
     async createHelper(req: Request, res: Response) {
+
+        const missingkeys: string[] = []
+        helperKeys.forEach((key) => {
+            if (!Object.keys(req.body).includes(key)) missingkeys.push(key)
+        })
+        if (missingkeys.length > 0) {
+            return res.status(400).json({ error: "missing fields in req.body", missingFields: missingkeys })
+        }
 
         Object.keys(req.body).forEach((key) => {
             if (!(helperKeys.includes(key))) return res.status(400).json({ error: "Invalid fields in req.body" })
