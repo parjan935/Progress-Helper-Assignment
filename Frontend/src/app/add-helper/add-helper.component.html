@@ -45,8 +45,8 @@
         <h1>Additional Documents</h1>
         <p>Upload related documents (Optional).</p>
 
-        <app-file-input-component [file]="get('additionalDocx')?.value"
-          (fileSelected)="onFileChange($event)" (removeFile)="removeSelectedFile()"></app-file-input-component>
+        <app-file-input-component [file]="get('additionalDocx')?.value" (fileSelected)="onFileChange($event)"
+          (removeFile)="removeSelectedFile()"></app-file-input-component>
 
         <div class="nav-btns">
           <button matButton (click)="stepper.previous()"> <mat-icon>chevron_left</mat-icon>Previous</button>
@@ -83,11 +83,16 @@
                 </tr>
                 <tr>
                   <td>Email</td>
-                  <td>{{ firstFormGroup.get('email')?.value }}</td>
+                  <td>{{ firstFormGroup.get('email')?.value || '--'}}</td>
                 </tr>
                 <tr>
                   <td>KYC Document</td>
-                  <td>----</td>
+                  <td>
+                    <span class="view-docx" (click)="openKycFIle()">
+                      <mat-icon>visibility</mat-icon>
+                      view
+                    </span>
+                  </td>
                 </tr>
               </table>
             </div>

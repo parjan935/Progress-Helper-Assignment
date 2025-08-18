@@ -37,12 +37,20 @@ export class ApiService {
     }
 
     downloadHelpers(payload: any[]): void {
+        payload.forEach(helper => {
+            helper.kycDocx = helper.kycDocx?.fileName || '-';
+            helper.additionalDocx = helper.additionalDocx?.fileName || '-';
+            delete helper.profilePic
+            delete helper.employeeId_QR
+            delete helper._id
+            delete helper.__v
+        })
         this.http.post(`${this.baseUrl}/download-helpers`, payload, { responseType: 'blob' })
             .subscribe(blob => {
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = 'selected-helpers.xlsx';
+                a.download = 'filtered-helpers-list.xlsx';
                 a.click();
                 window.URL.revokeObjectURL(url);
             })

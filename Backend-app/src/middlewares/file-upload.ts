@@ -18,21 +18,20 @@ export const fileUploadMiddleware = (req: Request, res: Response, next: NextFunc
         const kycFile = files?.kycDocx?.[0]
         const additionalDocx = files?.additionalDocx?.[0]
 
-        req.body.kycDocx = {
-            fileName: kycFile?.originalname,
-            mimeType: kycFile?.mimetype,
-            base64File: kycFile?.buffer.toString('base64'),
+        if (kycFile) {
+            req.body.kycDocx = {
+                fileName: kycFile?.originalname,
+                mimeType: kycFile?.mimetype,
+                base64File: kycFile?.buffer.toString('base64'),
+            }
         }
-        
+
         if (additionalDocx) {
             req.body.additionalDocx = {
                 fileName: additionalDocx?.originalname,
                 mimeType: additionalDocx?.mimetype,
                 base64File: additionalDocx?.buffer.toString('base64'),
             }
-        }
-        else {
-            req.body.additionalDocx = null
         }
 
         next();

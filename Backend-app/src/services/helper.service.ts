@@ -1,8 +1,8 @@
+import { Counter } from "../models/counter.model";
 import Helper from "../models/helper.model";
 import generateQRCode from "../utils/generateQR";
 
 import * as XLSX from 'xlsx';
-
 
 export interface IHelper {
     name: string;
@@ -23,6 +23,17 @@ export interface IHelper {
 }
 
 export class HelperServices {
+
+    private async getNextEmployeeID() {
+        const counter = await Counter.findByIdAndUpdate(
+            'employeeID',
+            { $inc: { seq: 1 } },
+            { new: true, upsert: true, setDefaultsOnInsert: true }
+        );
+
+        return counter.seq;
+    }
+
     async getAllHelpers(): Promise<IHelper[]> {
         const helpers: IHelper[] = await Helper.find().sort({ name: 1 });
         return helpers;
@@ -46,13 +57,8 @@ export class HelperServices {
     }
 
     async createHelper(helper: IHelper): Promise<IHelper> {
-        let employeeID = 100
-        const emp = await Helper.findOne()
-            .sort({ employeeID: -1 })
-            .select('employeeID');
 
-        if (emp) employeeID = emp.employeeID + 1
-        helper.employeeID = employeeID
+        helper.employeeID = await this.getNextEmployeeID()
 
         const payload = {
             name: helper.name,

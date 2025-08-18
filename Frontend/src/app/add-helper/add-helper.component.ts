@@ -69,7 +69,7 @@ export class AddHelperComponent implements OnInit {
 
     this.firstFormGroup.get('vehicleType')?.valueChanges.subscribe(value => {
       const vehicleNoControl = this.firstFormGroup.get('vehicleNo');
-      
+
       if (value && value != 'None') {
         vehicleNoControl?.setValidators([Validators.required]);
       } else {
@@ -128,6 +128,11 @@ export class AddHelperComponent implements OnInit {
         this.router.navigate(['/'])
       }
     }
+  }
+
+  openKycFIle() {
+    const fileURL = URL.createObjectURL(this.firstFormGroup.get('kycDocx')?.value);
+    window.open(fileURL);
   }
 
   addHelper = async () => {

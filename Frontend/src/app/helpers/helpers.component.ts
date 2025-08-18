@@ -23,7 +23,7 @@ import * as XLSX from 'xlsx';
 
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 
-interface Helper {
+export interface Helper {
   _id?: string,
   name: string;
   email: string;
@@ -41,7 +41,6 @@ interface Helper {
   employeeId_QR: string;
   dateJoined: Date;
 }
-
 
 @Component({
   selector: 'app-helpers',
@@ -82,20 +81,11 @@ export class HelpersComponent {
   }
   openFilter = false;
 
-  // @ViewChild('popupRef') popupRef!: ElementRef;
 
-  // togglePopup(event: MouseEvent) {
-  //   event.stopPropagation();
-  //   this.openFilter = !this.openFilter;
-  // }
+ toggleFilterPopup() {
+    this.openFilter = !this.openFilter;
+  }
 
-  // @HostListener('document:click', ['$event'])
-  // onDocumentClick(event: MouseEvent) {
-  //   const clickedInside = this.popupRef?.nativeElement.contains(event.target);
-  //   if (!clickedInside && this.openFilter) {
-  //     this.openFilter = false;
-  //   }
-  // }
 
 
   constructor(private dialog: MatDialog, private api: ApiService) { }
@@ -275,19 +265,19 @@ export class HelpersComponent {
   }
 
   saveAsExcel(): void {
-    // try {
-    //   this.api.downloadHelpers(this.filteredHelpers)
-    // } catch (error) {
-    //   console.log(error);
-    // }
-    if (confirm(`Do you want to download the filtered helpers in excel sheet format ?`)) {
-      const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.filteredHelpers);
-      const workbook: XLSX.WorkBook = {
-        Sheets: { 'Helpers': worksheet },
-        SheetNames: ['Helpers']
-      };
-      XLSX.writeFile(workbook, 'selected-helpers.xlsx');
+    try {
+      this.api.downloadHelpers(this.filteredHelpers)
+    } catch (error) {
+      console.log(error);
     }
+    // if (confirm(`Do you want to download the filtered helpers in excel sheet format ?`)) {
+    //   const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.filteredHelpers);
+    //   const workbook: XLSX.WorkBook = {
+    //     Sheets: { 'Helpers': worksheet },
+    //     SheetNames: ['Helpers']
+    //   };
+    //   XLSX.writeFile(workbook, 'selected-helpers.xlsx');
+    // }
   }
 }
 
@@ -320,10 +310,10 @@ class DeleteHelperDialog {
   imports: [MatIconModule],
   template: `
     <span class="custom-snackbar">
-    <div class="message">
+    <span class="message">
       <mat-icon>warning</mat-icon>
       {{ message }}
-    </div>
+    </span>
       <mat-icon class="close">close</mat-icon>
       
     </span>

@@ -91,6 +91,21 @@
         td {
           flex: 1;
           margin: 5px;
+
+          .view-docx {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: rgb(95, 143, 247);
+            cursor: pointer;
+            width: fit-content;
+
+            mat-icon {
+              font-size: large;
+              width: fit-content;
+              height: fit-content;
+            }
+          }
         }
       }
     }
