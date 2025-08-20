@@ -135,8 +135,10 @@ export class AddHelperComponent implements OnInit {
     window.open(fileURL);
   }
 
-  addHelper = async () => {
+  formSubmitted = false
 
+  addHelper = async () => {
+    if (this.formSubmitted) return
     const formData = new FormData();
     Object.entries(this.firstFormGroup.value).forEach(([key, value]) => {
       if (value instanceof File) {
@@ -147,12 +149,13 @@ export class AddHelperComponent implements OnInit {
         formData.append(key, value.toString());
       }
     })
-
+    
     try {
       this.api.createHelper(formData).subscribe((response) => {
         if (response.helper) {
           this.newHelperData = response.helper
           this.openVerifiedDialog()
+          this.formSubmitted = true
         }
         else {
           console.log(response);

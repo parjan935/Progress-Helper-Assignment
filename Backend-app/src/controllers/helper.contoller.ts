@@ -23,9 +23,10 @@ export class HelperControllers {
     async getNextHelpers(req: Request, res: Response) {
         const { pageNo } = req.body
         try {
-            const helpers = await helperService.getHelpersByFilters(req.body)
-            const data = helpers.slice(pageNo * 10, pageNo * 10 + 10)
-            res.json({ helpers: data, totalHelperCount: helpers.length })
+            const response = await helperService.getHelpersByFilters(req.body)
+            const data = response.helpers.slice(pageNo * 10, pageNo * 10 + 10)
+            res.json({ helpers: data, totalHelperCount: response.count, filteredHelpersCount: response.helpers.length })
+            // res.json({ helpers: data, totalHelperCount: helpers.length })
         } catch (error) {
             res.status(500).json(error)
         }

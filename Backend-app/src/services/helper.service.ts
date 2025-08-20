@@ -35,8 +35,8 @@ export class HelperServices {
         return counter.seq;
     }
 
-    async getHelpersByFilters(payload: any): Promise<IHelper[]> {
-        const { services, orgs, searchVal, sortField, joinedDateRange } = payload;        
+    async getHelpersByFilters(payload: any): Promise<{ helpers: IHelper[], count: number }> {
+        const { services, orgs, searchVal, sortField, joinedDateRange } = payload;
 
         const filter = [];
         if (services?.length > 0) filter.push({ service: { $in: services } });
@@ -47,7 +47,7 @@ export class HelperServices {
             startDate.setHours(0, 0, 0, 0);
             const endDate = new Date(joinedDateRange.end);
             endDate.setHours(23, 59, 59, 999);
-            
+
             filter.push({
                 dateJoined: {
                     $gte: startDate,
@@ -55,7 +55,7 @@ export class HelperServices {
                 },
             });
         }
-        
+
 
         const matchStage = filter.length > 0 ? { $match: { $and: filter } } : null;
 
@@ -65,11 +65,12 @@ export class HelperServices {
             pipeline.push({ $match: { $and: filter } } as PipelineStage);
         }
 
-        pipeline.push({ $sort: { [sortField as string]: 1 } } as PipelineStage);
+        pipeline.push({ $sort: { [sortField as string]: 1} } as PipelineStage);
 
         const helpers = await Helper.aggregate(pipeline);
 
-        return helpers
+        const helpersCount = (await Helper.find()).length
+        return { helpers, count: helpersCount }
     }
 
     async getHelperById(id: string): Promise<IHelper | null> {

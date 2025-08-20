@@ -24,6 +24,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import * as XLSX from 'xlsx';
 
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 
 export interface Helper {
   _id?: string,
@@ -61,7 +62,7 @@ export interface Helper {
     MatButtonModule,
     MatCardModule,
     MatNativeDateModule, FormsModule, MatProgressSpinnerModule,
-    InfiniteScrollDirective, MatBadgeModule],
+    InfiniteScrollDirective, MatBadgeModule, NgxSkeletonLoaderModule],
   templateUrl: './helpers.component.html',
   styleUrl: './helpers.component.scss'
 })
@@ -97,6 +98,7 @@ export class HelpersComponent {
   filteredHelpers: Helper[] = []
   selectedHelper = this.helpers?.[0]
   totalHelpersCount: number | string = '-'
+  filteredHelpersCount: number | string = '-'
 
   ngOnInit() {
     this.getNextHelpers()
@@ -130,6 +132,8 @@ export class HelpersComponent {
 
     this.filteredHelpers = []
     this.pageNo = 0
+    this.filteredHelpersCount = '-'
+    this.selectedHelper = this.filteredHelpers[0]
 
     this.getNextHelpers()
   }
@@ -141,6 +145,8 @@ export class HelpersComponent {
 
     this.filteredHelpers = []
     this.pageNo = 0
+    this.filteredHelpersCount = '-'
+    this.selectedHelper = this.filteredHelpers[0]
 
     this.getNextHelpers()
   }
@@ -154,6 +160,8 @@ export class HelpersComponent {
 
       this.filteredHelpers = []
       this.pageNo = 0
+      this.filteredHelpersCount = '-'
+    this.selectedHelper = this.filteredHelpers[0]
 
       this.getNextHelpers()
 
@@ -167,6 +175,8 @@ export class HelpersComponent {
 
     this.filteredHelpers = []
     this.pageNo = 0
+    this.filteredHelpersCount = '-'
+    this.selectedHelper = this.filteredHelpers[0]
 
     this.getNextHelpers()
 
@@ -182,6 +192,8 @@ export class HelpersComponent {
 
     this.filteredHelpers = []
     this.pageNo = 0
+    this.filteredHelpersCount = '-'
+    this.selectedHelper = this.filteredHelpers[0]
 
     this.getNextHelpers()
 
@@ -222,6 +234,7 @@ export class HelpersComponent {
           this.pageNo++
           this.helpers = response.helpers
           this.totalHelpersCount = response.totalHelperCount
+          this.filteredHelpersCount = response.filteredHelpersCount
           this.filteredHelpers = [...this.filteredHelpers, ...this.helpers]
           this.selectedHelper = this.filteredHelpers?.[0]
         })
@@ -229,7 +242,7 @@ export class HelpersComponent {
         console.log(error);
       }
       this.loadingHelpers = false
-    }, 1000);
+    }, 500);
   }
 
   sortHelpersBy(key: 'name' | 'employeeID') {

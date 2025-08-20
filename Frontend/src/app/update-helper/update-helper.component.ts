@@ -144,8 +144,10 @@ export class UpdateHelperComponent implements OnInit {
     }
   }
 
+  formSubmitted=false
 
   updateHelper = async () => {
+    if(this.formSubmitted) return
     try {
       if (this.firstFormGroup.get('kycDocx')?.value?.base64File) this.firstFormGroup.removeControl('kycDocx');
       if (this.firstFormGroup.get('additionalDocx')?.value?.base64File) this.firstFormGroup.removeControl('additionalDocx');
@@ -169,6 +171,7 @@ export class UpdateHelperComponent implements OnInit {
         alert('Helper update successfull')
         this.router.navigate(['/'])
       })
+      this.formSubmitted=true
     } catch (error) {
       console.log(error);
     }

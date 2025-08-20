@@ -8,6 +8,9 @@ import { provideHttpClient } from '@angular/common/http';
 
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 
+import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
+
+
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes), provideAnimationsAsync(), provideHttpClient(), InfiniteScrollDirective]
+  providers: [provideRouter(routes), provideAnimationsAsync(), provideHttpClient(), InfiniteScrollDirective, NgxSkeletonLoaderModule]
 };

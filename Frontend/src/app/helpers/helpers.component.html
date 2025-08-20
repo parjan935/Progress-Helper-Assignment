@@ -81,8 +81,8 @@
         #searchInput>
     </div>
     <span class="helper-count">
-      {{filteredHelpers.length+" of "+totalHelpersCount}}
-      helpers
+      <span *ngIf="filteredHelpersCount==totalHelpersCount else filtered">{{totalHelpersCount}} helpers</span>
+      <ng-template #filtered>{{filteredHelpersCount+" of "+totalHelpersCount+" results"}}</ng-template>
     </span>
   </div>
   <div class="save-add">
@@ -122,8 +122,20 @@
         <p *ngIf="helpers.length==0">Click on Add Helper to add.</p>
       </div>
     </div>
-    <div *ngIf="loadingHelpers" style=" display: flex; justify-content: center; align-items: center; padding: 20px;">
-      Loading...<mat-spinner [diameter]="15" style="margin-left: 5px;"></mat-spinner>
+    <!-- //// helper-item skeleton //// -->
+    <div *ngIf="loadingHelpers">
+      <div *ngFor="let i of [].constructor(7)"
+        style=" display: flex; justify-content: flex-start; align-items: center; padding: 10px 5px;">
+        <ngx-skeleton-loader count="1" appearance="circle" [theme]="{ width: '55px', height: '55px' }" />
+        <div>
+          <ngx-skeleton-loader count="1"
+            [theme]="{ 'border-radius': '4px', width: '150px', height: '20px' ,margin:'0px'}" />
+          <ngx-skeleton-loader count="1"
+            [theme]="{ 'border-radius': '4px', width: '100px', height: '10px' ,margin:'0px'}" />
+        </div>
+        <ngx-skeleton-loader count="1"
+          [theme]="{ 'border-radius': '4px', width: '80px', height: '10px' ,margin:'0px'}" />
+      </div>
     </div>
   </div>
   <div class="mat-drawer-content ">
@@ -216,7 +228,19 @@
       </div>
       <ng-template #noHelpers>
         <div class="no-helper">
-          <p>Select a helper to diaplay.</p>
+          <p *ngIf="!loadingHelpers">Select a helper to diaplay.</p>
+          <!-- ///// Helper Data skeleton ///// -->
+          <div *ngIf="loadingHelpers" style="margin-left: 30px;">
+            <div style="display: flex; align-items: center; justify-content: flex-start;">
+              <ngx-skeleton-loader count="1" appearance="circle" [theme]="{ width: '100px', height: '100px' }" />
+              <ngx-skeleton-loader count="1"
+                [theme]="{ 'border-radius': '4px', width: '150px', height: '50px' ,margin:'0px'}" />
+            </div>
+            <div>
+              <ngx-skeleton-loader count="8"
+                [theme]="{ 'border-radius': '4px', width: '700px', height: '30px' ,margin:'10px'}" />
+            </div>
+          </div>
         </div>
       </ng-template>
     </div>
