@@ -12,8 +12,9 @@ export class ApiService {
 
     constructor(private http: HttpClient) { }
 
-    getHelpers(): Observable<any> {
-        return this.http.get(`${this.baseUrl}`);
+    getHelpers(filter: any): Observable<any> {
+        // return this.http.get(`${this.baseUrl}`);
+        return this.http.post(`${this.baseUrl}/getHelpers`, filter);
     }
 
     getHelperByID(id: string): Observable<any> {

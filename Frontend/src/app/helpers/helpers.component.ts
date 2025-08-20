@@ -19,6 +19,8 @@ import { MatCardModule } from '@angular/material/card'
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ApiService } from '../api.service';
 
+import { MatBadgeModule } from '@angular/material/badge';
+
 import * as XLSX from 'xlsx';
 
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
@@ -59,7 +61,7 @@ export interface Helper {
     MatButtonModule,
     MatCardModule,
     MatNativeDateModule, FormsModule, MatProgressSpinnerModule,
-    InfiniteScrollDirective],
+    InfiniteScrollDirective, MatBadgeModule],
   templateUrl: './helpers.component.html',
   styleUrl: './helpers.component.scss'
 })
@@ -82,11 +84,9 @@ export class HelpersComponent {
   openFilter = false;
 
 
- toggleFilterPopup() {
+  toggleFilterPopup() {
     this.openFilter = !this.openFilter;
   }
-
-
 
   constructor(private dialog: MatDialog, private api: ApiService) { }
   private _snackBar = inject(MatSnackBar);
@@ -96,28 +96,18 @@ export class HelpersComponent {
   helpers: Helper[] = []
   filteredHelpers: Helper[] = []
   selectedHelper = this.helpers?.[0]
+  totalHelpersCount: number | string = '-'
 
   ngOnInit() {
-    this.getHelpers();
+    this.getNextHelpers()
   }
 
-  /// Get Helpers
-  getHelpers = async () => {
-    this.loadingHelpers = true
-    try {
-      this.api.getHelpers().subscribe((response) => {
-        this.helpers = response
-        this.filteredHelpers = this.helpers
-        this.selectedHelper = this.filteredHelpers?.[0]
-      })
-    } catch (error) {
-      console.log(error);
-    }
-    this.loadingHelpers = false
+  loadMoreHelpers() {
+    console.log("scrolled");
   }
 
+  //////// Filtering & Sorting \\\\\\\\
 
-  ///// Filtering & Sorting
   sortFilter: string = 'name';
   selectedDate = {
     start: '',
@@ -127,45 +117,76 @@ export class HelpersComponent {
   organizationFilter: string[] = []
   searchVal: string = '';
 
+  pageNo = 0
+
+  filterChanged = false
+
   applyDates() {
     if (!this.selectedDate.end) {
       this.selectedDate.start = ''
       return
     }
-    const st = new Date(this.selectedDate.start)
-    const end = new Date(this.selectedDate.end)
-    end.setHours(23, 59, 59, 999);
-    this.filteredHelpers = this.helpers.filter(h => {
-      const date = new Date(h.dateJoined);
-      return (date >= st && date <= end);
-    });
-    this.selectedHelper = this.filteredHelpers[0]
+    this.filterChanged = true
+
+    this.filteredHelpers = []
+    this.pageNo = 0
+
+    this.getNextHelpers()
   }
+
   resetDates() {
     this.selectedDate.start = ''
     this.selectedDate.end = ''
-    this.filteredHelpers = this.helpers
-    this.selectedHelper = this.filteredHelpers[0]
+    this.filterChanged = true
+
+    this.filteredHelpers = []
+    this.pageNo = 0
+
+    this.getNextHelpers()
   }
 
   timeOut: any
   handleSearchChange() {
     clearTimeout(this.timeOut)
     this.timeOut = setTimeout(() => {
-      console.log(this.searchVal);
 
-      this.filterHelpers()
+      this.filterChanged = true
+
+      this.filteredHelpers = []
+      this.pageNo = 0
+
+      this.getNextHelpers()
+
     }, 500);
   }
 
+  hideFilterBatch = true
   applyFilter() {
-    this.filterHelpers()
+    this.hideFilterBatch = false
+    this.filterChanged = true
+
+    this.filteredHelpers = []
+    this.pageNo = 0
+
+    this.getNextHelpers()
+
+    this.openFilter = false
+
   }
 
   resetFilter() {
+    this.hideFilterBatch = true
     this.serviceFilter = []
     this.organizationFilter = []
-    this.filterHelpers()
+    this.filterChanged = true
+
+    this.filteredHelpers = []
+    this.pageNo = 0
+
+    this.getNextHelpers()
+
+    this.openFilter = false
+
   }
 
   selectOrDeselectAll(field: string) {
@@ -179,32 +200,51 @@ export class HelpersComponent {
     }
   }
 
-  async filterHelpers() {
-    this.loadingHelpers = true
-    // this.selectedDate = null
-    this.sortFilter = 'name'
-    const filter = { services: this.serviceFilter, orgs: this.organizationFilter, searchVal: this.searchVal }
-    try {
-      this.api.getHelpersByFilter(filter).subscribe((response) => {
-        this.helpers = response
-        this.filteredHelpers = this.helpers
-        this.selectedHelper = this.filteredHelpers?.[0]
-      })
-    } catch (error) {
-      console.log(error);
+  async getNextHelpers() {
+    if (this.loadingHelpers) return
+    if (!this.filterChanged) {
+      if (this.totalHelpersCount === this.filteredHelpers.length) return
     }
-    this.openFilter = false
-    this.loadingHelpers = false
+
+    this.filterChanged = false
+
+    const filter = {
+      services: this.serviceFilter, orgs: this.organizationFilter,
+      searchVal: this.searchVal, sortField: this.sortFilter,
+      joinedDateRange: this.selectedDate, pageNo: this.pageNo
+    }
+
+    this.loadingHelpers = true
+
+    setTimeout(() => {
+      try {
+        this.api.getHelpers(filter).subscribe((response) => {
+          this.pageNo++
+          this.helpers = response.helpers
+          this.totalHelpersCount = response.totalHelperCount
+          this.filteredHelpers = [...this.filteredHelpers, ...this.helpers]
+          this.selectedHelper = this.filteredHelpers?.[0]
+        })
+      } catch (error) {
+        console.log(error);
+      }
+      this.loadingHelpers = false
+    }, 1000);
   }
 
   sortHelpersBy(key: 'name' | 'employeeID') {
     console.log(key);
     this.sortFilter = key;
     this.filteredHelpers = this.filteredHelpers.sort((a, b) => {
-      const valA = a[key]?.toString().toLowerCase() || '';
-      const valB = b[key]?.toString().toLowerCase() || '';
-      return valA.localeCompare(valB);
-    });
+      if (key === 'name') {
+        const valA = a.name?.toString().toLowerCase() || '';
+        const valB = b.name?.toString().toLowerCase() || '';
+        return valA.localeCompare(valB);
+      }
+      const valA = a.employeeID ?? 0;
+      const valB = b.employeeID ?? 0;
+      return valA - valB;
+    })
   }
 
   /// Delete Helper
@@ -270,14 +310,6 @@ export class HelpersComponent {
     } catch (error) {
       console.log(error);
     }
-    // if (confirm(`Do you want to download the filtered helpers in excel sheet format ?`)) {
-    //   const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.filteredHelpers);
-    //   const workbook: XLSX.WorkBook = {
-    //     Sheets: { 'Helpers': worksheet },
-    //     SheetNames: ['Helpers']
-    //   };
-    //   XLSX.writeFile(workbook, 'selected-helpers.xlsx');
-    // }
   }
 }
 

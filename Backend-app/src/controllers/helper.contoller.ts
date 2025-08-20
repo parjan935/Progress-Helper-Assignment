@@ -7,41 +7,25 @@ const helperService = new HelperServices();
 const helperKeys: string[] = [
     'name',
     'profilePic',
-    'email',
+    // 'email',
     'gender',
     'phone',
     'service',
     'organization',
     'languages',
     'vehicleType',
-    'vehicleNo',
+    // 'vehicleNo',
     'kycDocx',
-    'additionalDocx',
+    // 'additionalDocx',
 ]
 
 export class HelperControllers {
-
-    async getAllHelpers(req: Request, res: Response) {
-        try {
-            const helpers = await helperService.getAllHelpers();
-            res.json(helpers)
-        } catch (error) {
-            res.status(500).json(error)
-        }
-    }
-
-    async getHelpersByFilters(req: Request, res: Response) {
-        const { services, orgs, searchVal } = req.body
-        if (!services || !orgs || !searchVal) return res.status(400).json({ error: "missing fields in req.body" })
-
-        const InvalidKeys: string[] = Object.keys(req.body).filter
-            ((key) => { key !== 'services' && key !== 'orgs' && key !== 'serarhVal' })
-
-        if (InvalidKeys.length > 0) return res.status(400).json({ error: "invalid fields in req.body" })
-
+    async getNextHelpers(req: Request, res: Response) {
+        const { pageNo } = req.body
         try {
             const helpers = await helperService.getHelpersByFilters(req.body)
-            res.json(helpers)
+            const data = helpers.slice(pageNo * 10, pageNo * 10 + 10)
+            res.json({ helpers: data, totalHelperCount: helpers.length })
         } catch (error) {
             res.status(500).json(error)
         }
@@ -68,10 +52,6 @@ export class HelperControllers {
             return res.status(400).json({ error: "missing fields in req.body", missingFields: missingkeys })
         }
 
-        Object.keys(req.body).forEach((key) => {
-            if (!(helperKeys.includes(key))) return res.status(400).json({ error: "Invalid fields in req.body" })
-        })
-
         const helperData = req.body
         try {
             const newHelper = await helperService.createHelper(helperData)
@@ -93,11 +73,6 @@ export class HelperControllers {
     }
 
     async updateHelper(req: Request, res: Response) {
-
-        Object.keys(req.body).forEach((key) => {
-            if (!(helperKeys.includes(key))) return res.status(400).json({ error: "Invalid fields in req.body" })
-        })
-
         const id: string = req.params.id as string
         const helper = req.body
         try {

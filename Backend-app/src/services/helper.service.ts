@@ -1,3 +1,4 @@
+import { PipelineStage } from "mongoose";
 import { Counter } from "../models/counter.model";
 import Helper from "../models/helper.model";
 import generateQRCode from "../utils/generateQR";
@@ -34,20 +35,40 @@ export class HelperServices {
         return counter.seq;
     }
 
-    async getAllHelpers(): Promise<IHelper[]> {
-        const helpers: IHelper[] = await Helper.find().sort({ name: 1 });
-        return helpers;
-    }
-
     async getHelpersByFilters(payload: any): Promise<IHelper[]> {
-        const { services, orgs, searchVal } = payload
+        const { services, orgs, searchVal, sortField, joinedDateRange } = payload;        
 
-        const filter = []
-        if (services.length > 0) filter.push({ service: { $in: services } })
-        if (orgs.length > 0) filter.push({ organization: { $in: orgs } })
-        filter.push({ name: { $regex: searchVal, $options: 'i' } });
+        const filter = [];
+        if (services?.length > 0) filter.push({ service: { $in: services } });
+        if (orgs?.length > 0) filter.push({ organization: { $in: orgs } });
+        if (searchVal) filter.push({ name: { $regex: searchVal, $options: "i" } });
+        if (joinedDateRange?.start && joinedDateRange?.end) {
+            const startDate = new Date(joinedDateRange.start);
+            startDate.setHours(0, 0, 0, 0);
+            const endDate = new Date(joinedDateRange.end);
+            endDate.setHours(23, 59, 59, 999);
+            
+            filter.push({
+                dateJoined: {
+                    $gte: startDate,
+                    $lte: endDate,
+                },
+            });
+        }
+        
 
-        const helpers = await Helper.aggregate([{ $match: { $and: filter } }, { $sort: { name: 1 } }])
+        const matchStage = filter.length > 0 ? { $match: { $and: filter } } : null;
+
+        const pipeline: PipelineStage[] = [];
+
+        if (filter.length > 0) {
+            pipeline.push({ $match: { $and: filter } } as PipelineStage);
+        }
+
+        pipeline.push({ $sort: { [sortField as string]: 1 } } as PipelineStage);
+
+        const helpers = await Helper.aggregate(pipeline);
+
         return helpers
     }
 

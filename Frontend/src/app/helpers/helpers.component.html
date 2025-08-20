@@ -21,7 +21,7 @@
     </div>
 
     <div class="filter-by-servOrg">
-      <button (click)="toggleFilterPopup()">
+      <button (click)="toggleFilterPopup()" matBadge="1" [matBadgeHidden]="hideFilterBatch" matBadgeSize="small">
         <mat-icon>filter_alt</mat-icon>
       </button>
       <mat-card class="example-card" *ngIf="openFilter">
@@ -30,7 +30,7 @@
           <mat-card-title>Filter</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          
+
           <label for="service">Type of Service*</label>
           <mat-form-field appearance="outline">
             <mat-select placeholder="Select Type of Service" [(ngModel)]="serviceFilter" multiple>
@@ -60,11 +60,13 @@
     </div>
 
     <div class="calendar">
+      <button matButton (click)="rangePicker.open()" matBadge="1"
+        [matBadgeHidden]="!selectedDate.start && !selectedDate.end" matBadgeSize="small">
+        <mat-icon>event</mat-icon></button>
       <mat-date-range-input [rangePicker]="rangePicker">
         <input matStartDate placeholder="Start date" hidden [(ngModel)]="selectedDate.start" />
         <input matEndDate placeholder="End date" hidden [(ngModel)]="selectedDate.end" />
       </mat-date-range-input>
-      <button matButton (click)="rangePicker.open()"> <mat-icon>event</mat-icon></button>
       <mat-date-range-picker #rangePicker>
         <mat-date-range-picker-actions>
           <button matButton matDateRangePickerCancel (click)="resetDates()">Reset</button>
@@ -79,7 +81,7 @@
         #searchInput>
     </div>
     <span class="helper-count">
-      {{helpers.length==filteredHelpers.length ? helpers.length : filteredHelpers.length+" of "+helpers.length }}
+      {{filteredHelpers.length+" of "+totalHelpersCount}}
       helpers
     </span>
   </div>
@@ -97,8 +99,9 @@
 <!-- /// Data  -->
 
 <div class="example-container">
-  <div class="mat-drawer" mode="side">
-    <div *ngIf="!loadingHelpers else loading ">
+  <div class="mat-drawer" mode="side" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="500"
+    [scrollWindow]="false" (scrolled)="getNextHelpers()">
+    <div>
 
       <div *ngFor="let helper of filteredHelpers" class="helper" (click)="selectedHelper=helper"
         [ngStyle]="{'background-color':helper.name===selectedHelper.name ? 'rgb(231, 230, 247)':''}">
@@ -114,14 +117,14 @@
         </div>
         <p class="households">0 households</p>
       </div>
-      <div class="no-helpers" *ngIf="!loadingHelpers && filteredHelpers && filteredHelpers.length==0">
+      <div class="no-helpers" *ngIf="!loadingHelpers && filteredHelpers.length==0">
         <p>No helpers to display.</p>
         <p *ngIf="helpers.length==0">Click on Add Helper to add.</p>
       </div>
     </div>
-    <ng-template #loading>
-      Loading<mat-spinner [diameter]="15" style="margin-left: 5px;"></mat-spinner>
-    </ng-template>
+    <div *ngIf="loadingHelpers" style=" display: flex; justify-content: center; align-items: center; padding: 20px;">
+      Loading...<mat-spinner [diameter]="15" style="margin-left: 5px;"></mat-spinner>
+    </div>
   </div>
   <div class="mat-drawer-content ">
     <div>
