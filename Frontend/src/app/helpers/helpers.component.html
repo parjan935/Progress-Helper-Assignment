@@ -1,0 +1,248 @@
+<mat-toolbar style="  border: 1px solid rgb(206, 204, 204);
+">
+  <div>Helpers</div>
+</mat-toolbar>
+<mat-toolbar>
+  <div class="filtering">
+    <div class="sorting">
+      <button matButton [matMenuTriggerFor]="sorting">
+        <mat-icon>swap_vert</mat-icon>
+      </button>
+      <mat-menu #sorting="matMenu">
+        <span disabled>Sort by</span>
+        <button mat-menu-item [style.backgroundColor]="sortFilter=='name'?'rgb(231, 230, 247)':''"
+          (click)="sortHelpersBy('name')">Helpers Names(A-Z) <mat-icon
+            [style.display]="sortFilter=='name'?'':'none'">check</mat-icon> </button>
+        <button mat-menu-item [style.backgroundColor]="sortFilter=='employeeID'?'rgb(231, 230, 247)':''"
+          (click)="sortHelpersBy('employeeID')">Employee ID <mat-icon
+            [style.display]="sortFilter=='employeeID'?'':'none'">check</mat-icon>
+        </button>
+      </mat-menu>
+    </div>
+
+    <div class="filter-by-servOrg">
+      <button (click)="toggleFilterPopup()" matBadge="1" [matBadgeHidden]="hideFilterBatch" matBadgeSize="small">
+        <mat-icon>filter_alt</mat-icon>
+      </button>
+      <mat-card class="example-card" *ngIf="openFilter">
+        <mat-card-header>
+          <mat-icon (click)="openFilter=false">close</mat-icon>
+          <mat-card-title>Filter</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+
+          <label for="service">Type of Service*</label>
+          <mat-form-field appearance="outline">
+            <mat-select placeholder="Select Type of Service" [(ngModel)]="serviceFilter" multiple>
+              <mat-option (click)="selectOrDeselectAll('service')"
+                [value]="'all'">{{serviceFilter.length===inputOptions.services.length?'Deselect
+                All':'Select All'}} </mat-option>
+              <mat-option *ngFor="let s of inputOptions.services" [value]="s">{{s}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <label for="org">Organization Name*</label>
+          <mat-form-field appearance="outline">
+            <mat-select placeholder="Organization Name" [(ngModel)]="organizationFilter" multiple>
+              <mat-option (click)="selectOrDeselectAll('organization')"
+                [value]="'all'">{{organizationFilter.length===inputOptions.orgs.length?'Deselect
+                All':'Select All'}} </mat-option>
+              <mat-option *ngFor="let o of inputOptions.orgs" [value]="o">{{o}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+        </mat-card-content>
+        <mat-card-actions>
+          <button (click)="resetFilter()"> reset</button>
+          <button (click)="applyFilter()">apply</button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+
+    <div class="calendar">
+      <button matButton (click)="rangePicker.open()" matBadge="1"
+        [matBadgeHidden]="!selectedDate.start && !selectedDate.end" matBadgeSize="small">
+        <mat-icon>event</mat-icon></button>
+      <mat-date-range-input [rangePicker]="rangePicker">
+        <input matStartDate placeholder="Start date" hidden [(ngModel)]="selectedDate.start" />
+        <input matEndDate placeholder="End date" hidden [(ngModel)]="selectedDate.end" />
+      </mat-date-range-input>
+      <mat-date-range-picker #rangePicker>
+        <mat-date-range-picker-actions>
+          <button matButton matDateRangePickerCancel (click)="resetDates()">Reset</button>
+          <button matButton="elevated" matDateRangePickerApply (click)=applyDates()>Apply</button>
+        </mat-date-range-picker-actions>
+      </mat-date-range-picker>
+    </div>
+
+    <div class="search">
+      <mat-icon>search</mat-icon>
+      <input type="search" placeholder="Search by name" [(ngModel)]="searchVal" (input)="handleSearchChange()"
+        #searchInput>
+    </div>
+    <span class="helper-count">
+      <span *ngIf="filteredHelpersCount==totalHelpersCount else filtered">{{totalHelpersCount}} helpers</span>
+      <ng-template #filtered>{{filteredHelpersCount+" of "+totalHelpersCount+" results"}}</ng-template>
+    </span>
+  </div>
+  <div class="save-add">
+    <div class="save" (click)="saveAsExcel()">
+      <mat-icon>download</mat-icon>
+    </div>
+    <button routerLink="add-helper">
+      <mat-icon>add</mat-icon>
+      <a>Add-helper</a>
+    </button>
+  </div>
+</mat-toolbar>
+
+<!-- /// Data  -->
+
+<div class="example-container">
+  <div class="mat-drawer" mode="side" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="500"
+    [scrollWindow]="false" (scrolled)="getNextHelpers()">
+    <div>
+
+      <div *ngFor="let helper of filteredHelpers" class="helper" (click)="selectedHelper=helper"
+        [ngStyle]="{'background-color':helper.name===selectedHelper.name ? 'rgb(231, 230, 247)':''}">
+        <div class="left-data">
+          <img alt="Prifile Photo"
+            [src]="helper.profilePic || 'https://ui-avatars.com/api/?name='+helper.name+'&background=random&color=fff&rounded=true&length=2'">
+          <div>
+            <p>
+              {{helper.name}}
+            </p>
+            <span>{{helper.service}}</span>
+          </div>
+        </div>
+        <p class="households">0 households</p>
+      </div>
+      <div class="no-helpers" *ngIf="!loadingHelpers && filteredHelpers.length==0">
+        <p>No helpers to display.</p>
+        <p *ngIf="helpers.length==0">Click on Add Helper to add.</p>
+      </div>
+    </div>
+    <!-- //// helper-item skeleton //// -->
+    <div *ngIf="loadingHelpers">
+      <div *ngFor="let i of [].constructor(7)"
+        style=" display: flex; justify-content: flex-start; align-items: center; padding: 10px 5px;">
+        <ngx-skeleton-loader count="1" appearance="circle" [theme]="{ width: '55px', height: '55px' }" />
+        <div>
+          <ngx-skeleton-loader count="1"
+            [theme]="{ 'border-radius': '4px', width: '150px', height: '20px' ,margin:'0px'}" />
+          <ngx-skeleton-loader count="1"
+            [theme]="{ 'border-radius': '4px', width: '100px', height: '10px' ,margin:'0px'}" />
+        </div>
+        <ngx-skeleton-loader count="1"
+          [theme]="{ 'border-radius': '4px', width: '80px', height: '10px' ,margin:'0px'}" />
+      </div>
+    </div>
+  </div>
+  <div class="mat-drawer-content ">
+    <div>
+      <div *ngIf="selectedHelper!==undefined; else noHelpers" class="helper-details">
+        <div class="data">
+          <div class="main-data">
+            <img
+              [src]="selectedHelper.profilePic || 'https://ui-avatars.com/api/?name='+selectedHelper.name+'&background=random&color=fff&rounded=true&length=2'"
+              alt="Profile Photo" alt="Profile Photo" />
+            <div>
+              <p>{{ selectedHelper.name }}</p>
+              <span style="color: rgb(143, 143, 143);">{{ selectedHelper.service }}</span>
+            </div>
+          </div>
+          <div class="edit-delete-btns">
+            <button routerLink="edit-helper/{{selectedHelper._id}}"><mat-icon>edit</mat-icon></button>
+            <button (click)="deleteHelper()"> <mat-icon>delete</mat-icon></button>
+          </div>
+        </div>
+        <div>
+          <div class="sub-heads">
+            <h5>EMPLOYEE ID</h5>
+            <span></span>
+          </div>
+          <div class="other-data">
+            <div>
+              <span>Identification Card</span>
+              <span>Employee Code</span>
+            </div>
+            <div>
+              <span class="view-docx" (click)="openEmployeeIdDialog()">
+                <mat-icon>visibility</mat-icon>
+                view
+              </span>
+              <span>{{selectedHelper.employeeID}}</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="sub-heads">
+            <h5>PERSONAL DETAILS</h5>
+            <span></span>
+          </div>
+          <div class="other-data">
+            <div>
+              <span>Gender</span>
+              <span>Languages</span>
+              <span>Mobile</span>
+              <span>Email</span>
+              <span>KYC Document</span>
+              <span>Additioanl Document</span>
+            </div>
+            <div>
+              <span>{{ selectedHelper.gender }}</span>
+              <span>{{ selectedHelper.languages }}</span>
+              <span>{{ selectedHelper.phone }}</span>
+              <span>{{ selectedHelper.email || "--"}}</span>
+              <span class="view-docx" (click)="viewDocx('kycDocx')">
+                <mat-icon>visibility</mat-icon>
+                view
+              </span>
+              <span *ngIf="selectedHelper.additionalDocx else noDocx" class="view-docx"
+                (click)="viewDocx('additionalDocx')">
+                <mat-icon>visibility</mat-icon>
+                view
+              </span>
+              <ng-template #noDocx>--</ng-template>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="sub-heads">
+            <h5>SERVICE DETAILS</h5>
+            <span></span>
+          </div>
+          <div class="other-data">
+            <div>
+              <span>Type</span>
+              <span>Organization</span>
+              <span>Joined On</span>
+            </div>
+            <div>
+              <span>{{ selectedHelper.service }}</span>
+              <span>{{ selectedHelper.organization }}</span>
+              <span>{{selectedHelper.dateJoined | date: 'longDate'}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ng-template #noHelpers>
+        <div class="no-helper">
+          <p *ngIf="!loadingHelpers">Select a helper to diaplay.</p>
+          <!-- ///// Helper Data skeleton ///// -->
+          <div *ngIf="loadingHelpers" style="margin-left: 30px;">
+            <div style="display: flex; align-items: center; justify-content: flex-start;">
+              <ngx-skeleton-loader count="1" appearance="circle" [theme]="{ width: '100px', height: '100px' }" />
+              <ngx-skeleton-loader count="1"
+                [theme]="{ 'border-radius': '4px', width: '150px', height: '50px' ,margin:'0px'}" />
+            </div>
+            <div>
+              <ngx-skeleton-loader count="8"
+                [theme]="{ 'border-radius': '4px', width: '700px', height: '30px' ,margin:'10px'}" />
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

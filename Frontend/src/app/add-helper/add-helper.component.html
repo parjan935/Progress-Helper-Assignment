@@ -1,0 +1,127 @@
+<div class="header">
+  <a (click)="goToHome()">
+    <mat-icon>chevron_left</mat-icon> Add Helper
+  </a>
+</div>
+
+
+<div class="stepper-container">
+  <mat-vertical-stepper [linear]="'true'" #stepper class="stepper">
+    <mat-step [stepControl]="firstFormGroup">
+      <ng-template matStepLabel>
+        <div class="step-label">
+          <h3 class="step-title">Helper Details</h3>
+          <h5 class="step-subtitle">Add helper details</h5>
+        </div>
+      </ng-template>
+    </mat-step>
+    <mat-step [stepControl]="firstFormGroup">
+      <ng-template matStepLabel>
+        <div class="step-label">
+          <h3 class="step-title">Documents</h3>
+          <h5 class="step-subtitle">Upload related documents</h5>
+        </div>
+      </ng-template>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>
+        <div class="step-label">
+          <h3 class="step-title">Review</h3>
+          <h5 class="step-subtitle">Check the information and confirm</h5>
+        </div>
+      </ng-template>
+    </mat-step>
+  </mat-vertical-stepper>
+
+  <div class="step-content">
+    <ng-container [ngSwitch]="stepper.selectedIndex">
+
+      <app-helper-form *ngSwitchCase="0" usedFor="addHelper" [firstFormGroup]="firstFormGroup"
+        (formValid)="stepper.next()">
+      </app-helper-form>
+
+
+      <form class="step-form" [formGroup]="firstFormGroup" *ngSwitchCase="1">
+        <h1>Additional Documents</h1>
+        <p>Upload related documents (Optional).</p>
+
+        <app-file-input-component [file]="get('additionalDocx')?.value" (fileSelected)="onFileChange($event)"
+          (removeFile)="removeSelectedFile()"></app-file-input-component>
+
+        <div class="nav-btns">
+          <button matButton (click)="stepper.previous()"> <mat-icon>chevron_left</mat-icon>Previous</button>
+          <button matButton (click)="stepper.next()">Next <mat-icon>chevron_right</mat-icon></button>
+        </div>
+      </form>
+
+      <div *ngSwitchCase="2">
+        <div class="final-step">
+          <div class="final-step-profileDet">
+            <img
+              [src]="get('profilePic')?.value || 'https://ui-avatars.com/api/?name=' + firstFormGroup.get('name')?.value + '&background=random&color=fff&rounded=true&length=2'"
+              alt="Profile Photo" />
+            <div>
+              <h3>{{firstFormGroup.get('name')?.value}}</h3>
+              <span>{{firstFormGroup.get('service')?.value}}</span>
+            </div>
+          </div>
+          <div>
+            <h3>Personal Details</h3>
+            <div class="final-step-otherDet">
+              <table>
+                <tr>
+                  <td>Gender</td>
+                  <td>{{ firstFormGroup.get('gender')?.value }}</td>
+                </tr>
+                <tr>
+                  <td>Languages</td>
+                  <td>{{ firstFormGroup.get('languages')?.value }}</td>
+                </tr>
+                <tr>
+                  <td>Mobile</td>
+                  <td>{{ firstFormGroup.get('phone')?.value }}</td>
+                </tr>
+                <tr>
+                  <td>Email</td>
+                  <td>{{ firstFormGroup.get('email')?.value || '--'}}</td>
+                </tr>
+                <tr>
+                  <td>KYC Document</td>
+                  <td>
+                    <span class="view-docx" (click)="openKycFIle()">
+                      <mat-icon>visibility</mat-icon>
+                      view
+                    </span>
+                  </td>
+                </tr>
+              </table>
+            </div>
+          </div>
+          <div>
+            <h3>Service Details</h3>
+            <div class="final-step-otherDet">
+              <table>
+                <tr>
+                  <td>Type</td>
+                  <td>{{ firstFormGroup.get('service')?.value }}</td>
+                </tr>
+                <tr>
+                  <td>Organization</td>
+                  <td>{{ firstFormGroup.get('organization')?.value }}</td>
+                </tr>
+                <tr>
+                  <td>Joined On</td>
+                  <td>{{ currDate | date:'mediumDate' }}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="nav-btns">
+          <button matButton (click)="stepper.previous()"><mat-icon>chevron_left</mat-icon> Previous</button>
+          <button matButtonn (click)="addHelper()"> <mat-icon>add</mat-icon> Add Helper</button>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

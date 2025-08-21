@@ -1,0 +1,373 @@
+mat-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: white;
+
+  .filtering {
+    display: flex;
+    gap: 10px;
+
+    button {
+      padding: 5px;
+      background-color: transparent;
+      color: black;
+      border: 0.5px solid gray;
+    }
+
+    button:hover {
+      background-color: rgb(216, 216, 216);
+    }
+
+    .filter-by-servOrg {
+      mat-card {
+        width: 350px;
+        flex-direction: column;
+        background-color: rgb(248, 248, 248);
+        z-index: 1000;
+        position: fixed;
+        top: 115px;
+        left: 60px;
+
+        mat-card-header {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 10px;
+
+          mat-icon {
+            align-self: flex-end;
+            cursor: pointer;
+          }
+        }
+
+        mat-card-content {
+          display: flex;
+          flex-direction: column;
+          font-size: small;
+        }
+
+        mat-card-actions {
+          align-self: flex-end;
+          padding: 20px;
+          padding-top: 0;
+          gap: 10px;
+
+          button {
+            color: white;
+            background-color: rgb(45, 45, 45);
+            padding: 10px 30px;
+          }
+
+          button:hover {
+            background-color: black;
+          }
+        }
+      }
+    }
+
+    .calendar {
+      display: flex;
+      align-items: center;
+
+      mat-date-range-input {
+        display: none !important;
+      }
+
+      mat-date-range-picker-actions {
+        button:nth-child(1) {
+          margin-left: 10px;
+        }
+      }
+    }
+
+    .helper-count {
+      font-size: small;
+      color: gray;
+    }
+
+
+    .search {
+      display: flex;
+      align-items: center;
+      border: 1px solid gray;
+      border-radius: 5px;
+
+      mat-icon {
+        padding: 5px;
+      }
+
+      input {
+        padding: 4px;
+        font-size: medium;
+        border: none;
+        background-color: transparent;
+      }
+
+      input:focus {
+        outline: none;
+      }
+
+    }
+  }
+
+  .save-add {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    button {
+      a {
+        color: white;
+        text-decoration: none;
+      }
+    }
+
+    .save {
+      border: 1px solid black;
+      border-radius: 5px;
+      display: flex;
+      padding: 7px;
+      cursor: pointer;
+    }
+
+    .save:hover {
+      background-color: rgb(216, 216, 216);
+    }
+  }
+
+}
+
+.example-container {
+  background-color: white;
+  height: 84%;
+  display: flex;
+
+
+  .mat-drawer {
+    width: 25%;
+    min-width: 300px;
+    height: 98%;
+    overflow: scroll;
+    scrollbar-width: none;
+    border: 0.1px solid rgb(219, 219, 219);
+    border-radius: 10px;
+    margin: 0 20px;
+
+    :first-child {
+      border-top-right-radius: 10px;
+      border-top-left-radius: 10px;
+    }
+
+    .no-helpers {
+      text-align: center;
+      padding-top: 40px;
+    }
+
+    .helper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 15px;
+      border-bottom: 1px solid rgb(217, 217, 217);
+      cursor: pointer;
+
+      .left-data {
+        img {
+          width: 50px;
+          height: 50px;
+          border-radius: 100%;
+        }
+
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        div {
+
+          p {
+            font-weight: 500;
+            font-size: medium;
+            margin: 0;
+          }
+
+          span {
+            color: rgb(193, 193, 193);
+            font-size: small;
+          }
+        }
+      }
+
+      .households {
+        font-size: x-small;
+        justify-self: flex-end;
+        color: gray;
+      }
+    }
+
+    .helper:hover {
+      transition: 0.1s ease-in;
+      background-color: rgb(239, 239, 239);
+    }
+  }
+
+
+
+  .mat-drawer-content {
+    flex: 1;
+    height: 98%;
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(250, 250, 250);
+    border: 0.5px solid rgb(227, 226, 226);
+    border-radius: 10px;
+    margin-right: 20px;
+
+    div {
+      .no-helper {
+        display: flex;
+        height: 100%;
+        justify-content: center;
+        padding-top: 40px;
+      }
+    }
+
+    .edit-delete-btns {
+      display: flex;
+      justify-content: end;
+
+      button {
+        padding: 5px;
+        margin: 5px;
+        background-color: transparent;
+        color: black;
+        border: 0.5px solid gray;
+      }
+
+      button:hover {
+        margin: 5px;
+        background-color: rgb(216, 216, 216);
+      }
+    }
+
+    .helper-details {
+      padding: 20px 30px;
+      border-radius: 10px;
+      min-height: fit-content;
+
+      h3 {
+        font-weight: 400;
+        font-size: medium;
+      }
+
+      span,
+      tr {
+        color: rgb(84, 84, 84);
+        font-size: small;
+      }
+
+      div {
+        .sub-heads {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+
+          h5 {
+            display: flex;
+            width: fit-content;
+            color: gray;
+          }
+
+          span {
+            flex: 1;
+            border: 0.5px solid rgb(234, 234, 234);
+            height: 0;
+          }
+        }
+
+        .other-data {
+          display: flex;
+          width: 100%;
+
+          div {
+            display: flex;
+            flex-direction: column;
+            min-width: 200px;
+            gap: 15px;
+          }
+
+          .view-docx {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: rgb(95, 143, 247);
+            cursor: pointer;
+            width: fit-content;
+
+            mat-icon {
+              font-size: large;
+              width: fit-content;
+              height: fit-content;
+            }
+          }
+
+          .view-docx:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+
+      .data {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+
+        .main-data {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+
+          div {
+            p {
+              font-weight: 500;
+              font-size: medium;
+              margin: 0;
+            }
+          }
+
+          img {
+            width: 100px;
+            height: 100px;
+            border-radius: 100%;
+          }
+        }
+      }
+
+
+
+    }
+  }
+}
+
+
+
+::ng-deep .mat-mdc-menu-content {
+  padding: 15px !important;
+}
+
+::ng-deep .mat-mdc-menu-item {
+  font-size: 5px !important;
+  border-radius: 10px !important;
+  margin-top: 5px !important;
+}
+
+::ng-deep .mat-mdc-menu-item:hover {
+  background-color: rgb(231, 230, 247) !important;
+}
+
+::ng-deep .mat-datepicker-content {
+  position: fixed !important;
+  top: 115px !important;
+  left: 105px !important;
+}
